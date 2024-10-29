@@ -16,7 +16,6 @@ This work is licensed under a [Creative Commons Attribution International 4.0 Li
 
 If you use this work in your research, please cite our [paper](https://arxiv.org...) and [dataset](https://linusnep.github.io/EnvoDat/) using the following BibTeX entry:
 
-### Paper Citation
 ```
 @inproceedings{envodat,
     title={EnvoDat: A Large-Scale Multisensory Dataset for Robotic Spatial Awareness and Semantic Reasoning in Heterogeneous Environments},
