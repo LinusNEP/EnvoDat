@@ -10,7 +10,7 @@ kindly refer to the [INSTALL.md](docs/INSTALL.md) for installing the necessary t
 To learn more about using EnvoDat for training, benchmarking, and evaluating supervised learning models and perception algorithms, kindly refer to [GET_STARTED.md](docs/GET_STARTED.md).
 
 ## Summary Video
-[Summary video](https://youtu.be/5OcByVmTUPQ)
+[![Summary video](docs/sumVideo.png)](https://youtu.be/5OcByVmTUPQ)
 
 ## License
 This work is licensed under a [Creative Commons Attribution International 4.0 License](https://creativecommons.org/licenses/by/4.0/).
