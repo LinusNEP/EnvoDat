@@ -20,11 +20,14 @@ This work is licensed under a [Creative Commons Attribution International 4.0 Li
 If you use this work in your research, please cite our [paper](https://arxiv.org...) and [dataset](https://linusnep.github.io/EnvoDat/) using the following BibTeX entry:
 
 ```
-@inproceedings{envodat,
-    title={EnvoDat: A Large-Scale Multisensory Dataset for Robotic Spatial Awareness and Semantic Reasoning in Heterogeneous Environments},
-    author={Linus Nwankwo, Bjoern Ellensohn, Vedant Dave, Peter Hofer, Jan Forstner, Marlene Villeneuve, Robert Galler and Elmar Rueckert},
-    booktitle={},
-    year={}
+@misc{nwankwo2024envodatlargescalemultisensorydataset,
+      title={EnvoDat: A Large-Scale Multisensory Dataset for Robotic Spatial Awareness and Semantic Reasoning in Heterogeneous Environments}, 
+      author={Linus Nwankwo and Bjoern Ellensohn and Vedant Dave and Peter Hofer and Jan Forstner and Marlene Villneuve and Robert Galler and Elmar Rueckert},
+      year={2024},
+      eprint={2410.22200},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2410.22200}, 
 }
 ```
 
