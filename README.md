@@ -17,7 +17,7 @@ This work is licensed under a [Creative Commons Attribution International 4.0 Li
 
 ## Paper Citation
 
-If you use this work in your research, please cite our [paper](https://arxiv.org...) and [dataset](https://linusnep.github.io/EnvoDat/) using the following BibTeX entry:
+If you use this work in your research, please cite our [paper](https://arxiv.org/abs/2410.22200) and [dataset](https://linusnep.github.io/EnvoDat/) using the following BibTeX entry:
 
 ```
 @misc{nwankwo2024envodatlargescalemultisensorydataset,
