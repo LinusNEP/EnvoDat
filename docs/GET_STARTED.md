@@ -1,5 +1,5 @@
 # Training, evaluation, and benchmarking of object detector and classifier models on EnvoData
-In this demo, we will demonstrate how you can train supervised learning models on EnvoData, perform inference on new data, and evaluate the model performance. We will walk through key steps including model selection, training, benchmarking and fine-tuning.
+In this demo, we will demonstrate how to train supervised learning models on EnvoData, perform inference on new data, and evaluate the model's performance. We will walk through key steps, including model selection, training, benchmarking, and fine-tuning.
 
 ## Prerequisites
 - Python 3 installed on your system
@@ -19,7 +19,7 @@ sudo apt-get install python3-venv
 python3 -m venv EnvoDatEnv
 source EnvoDatEnv/bin/activate
 ```
-After the above step, you should see `(EnvoDatEnv)` at the start of your command prompt, indicating that the virtual environment is active. Once activated, install the necessary packages, e.g., ultralytics for YOLO and other relevant python libraries:
+After the above step, you should see `(EnvoDatEnv)` at the start of your command prompt, indicating that the virtual environment is active. Once activated, install the necessary packages, e.g., ultralytics for YOLO and other relevant Python libraries:
 ```bash
 pip install torch ultralytics
 pip install matplotlib opencv-python
@@ -56,7 +56,7 @@ dataset/
     ├── val/
     └── test/
 ```
-In each of the YOLOv* formats, there is a configuration file named `envodata.yaml` specifying the dataset paths and class names. If it does not exist, create one in the following form:
+In each of the YOLOv* formats, we provide a configuration file named `envodata.yaml` which specifies the dataset paths and class names. If it does not exist, create one in the following form:
 
 ```yaml
 path: ../dataset  # Path to EnvoData dataset
@@ -70,7 +70,7 @@ names: ["class_name1", "class_name2", ..., "class_nameN"]
 
 ## Training the YOLO model on EnvoDat
 
-1.	Download the pretrained model checkpoints (e.g., `yolov8s.pt` for YOLOv8 small or `yolov11n.pt` for YOLOv11 nano):
+1.	Download the pre-trained model checkpoints (e.g., `yolov8s.pt` for YOLOv8 small or `yolov11n.pt` for YOLOv11 nano):
 
 | Example models | Pretrained checkpoint download |
 |----------------|--------------------------------|
@@ -122,8 +122,8 @@ model.export(format='onnx')  # Export to ONNX format (alternatively use 'torchsc
 ```bash
 yolo predict model=best.pt source=path/to/unseen_images
 ```
-Alternatively you can simply run the following python script:
-```bash
+Alternatively, you can simply run the following Python script:
+```python
 import os
 import cv2
 import matplotlib.pyplot as plt
@@ -182,7 +182,7 @@ if __name__ == "__main__":
 ## Metrics and Analysis
 After training the model, the training results `results.csv` will be generated. You can analyse the validation losses, validation metrics (Precision, Recall, mAP), and learning rate over time using the following python script:
 
-```bash
+```python
 import pandas as pd
 import matplotlib.pyplot as plt
 
