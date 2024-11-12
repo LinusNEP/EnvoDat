@@ -33,7 +33,7 @@ pip install pandas matplotlib
 EnvoDat/
 ├── Indoors/
 │   ├── mu-hall/
-	├── annotations/
+│   │	├── annotations/
 │   │	└── ...
 │   │
 │   └── ...
@@ -72,7 +72,7 @@ names: ["class_name1", "class_name2", ..., "class_nameN"]
 
 1.	Download the pre-trained model checkpoints (e.g., `yolov8s.pt` for YOLOv8 small or `yolov11n.pt` for YOLOv11 nano):
 
-| Example models | Pretrained checkpoint download |
+| Example models | Pretrained checkpoints download |
 |----------------|--------------------------------|
 | YOLOv8    | [YOLOv8n](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8n.pt), [YOLOv8s](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8s.pt), [YOLOv8m](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8m.pt), [YOLOv8l](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8l.pt), [YOLOv8x](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8x.pt)  |
 | YOLOv9    |  [YOLOv9t](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov9t.pt), [YOLOv9s](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov9s.pt), [YOLOv9m](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov9m.pt), [YOLOv9c](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov9c.pt), [YOLOv9e](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov9e.pt)   |
