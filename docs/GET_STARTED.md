@@ -116,7 +116,7 @@ Once you are done training, you can save the trained model weights for inference
 ```bash
 model.export(format='onnx')  # Export to ONNX format (alternatively use 'torchscript', 'engine' etc.)
 ```
-## Run inference on multiple unseen images (optional)
+## Run inference on multiple unseen images
 1.	Prepare new images: Ensure that all the new images that you want to run inference on are in a single directory.
 2.	You can use the following command to run inference on all the new images in the directory.
 ```bash
