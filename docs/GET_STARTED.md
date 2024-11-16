@@ -44,25 +44,26 @@ EnvoDat/
 └── README.md
 ```
 
-2.   For this demo, we will be training the YOLOv8 model on MU-Hall data. Create a folder named dataset, and reorganize the downloaded annotation data in YOLO’s required directory structure as shown in the example below:
+2.   For this demo, we will be training YOLOv8 model on the MU-Hall data. Create a folder named dataset, and reorganize the downloaded annotation data in YOLO’s required directory structure as shown in the example below:
 ```
 dataset/
-├── images/
-│   ├── train/
-│   ├── val/
-│   └── test/
-└── labels/
-    ├── train/
-    ├── val/
-    └── test/
+├── test/
+│   ├── images/
+│   └── labels/
+├── train/
+│    ├── images/
+│    └── labels/
+├── valid/
+│   ├── images/
+│   └── labels/
+└── envodata-mu-hall.yaml
 ```
 In each of the scenes, we provide a YOLOv* configuration file named `envodata-*.yaml` which specifies the dataset paths and class names. If it does not exist, create one in the following form:
 
 ```yaml
-path: ../dataset  # Path to EnvoData dataset
-train: ../train/images	# Path to the train set
-val: ../valid/images	# Path to the validation set
-test: ../test/images	# Path to the test set
+train: ../train/images	
+val: ../valid/images	
+test: ../test/images	
 
 nc: <number of classes>
 names: ["class_name1", "class_name2", ..., "class_nameN"]
