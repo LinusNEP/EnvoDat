@@ -83,11 +83,11 @@ names: ["class_name1", "class_name2", ..., "class_nameN"]
 2.	Train the model with the following command:
 ```bash
 # For YOLOv8
-yolo train model=yolov8n.pt data=yolo train model=yolov8n.pt data=/.../dataset/envodata-mu-hall.yaml epochs=100 imgsz=640
+yolo train model=yolov8n.pt data=/.../dataset/envodata-mu-hall.yaml epochs=100 imgsz=640
  epochs=100 imgsz=640
 
 # For YOLOv11
-yolo train model=yolov11x.pt data=yolo train model=yolov11x.pt data=/.../dataset/envodata-mu-hall.yaml epochs=100 imgsz=640
+yolo train model=yolov11x.pt data=/.../dataset/envodata-mu-hall.yaml epochs=100 imgsz=640
  epochs=100 imgsz=640
 ```
 Adjust the model and hyperparameters as needed (e.g., `model`, `epochs`, `batch size`) for optimal results:
