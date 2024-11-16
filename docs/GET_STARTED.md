@@ -1,4 +1,4 @@
-# Train, evaluate, and benchmark supervised learning models on EnvoData
+# Train, evaluate, and benchmark supervised learning models on EnvoDat
 In this demo, we will demonstrate how to train, evaluate, and benchmark supervised learning models on EnvoData. Further, we will demonstrate how to perform inference on new data and a walk-through on key steps in model selection and fine-tuning.
 
 ## Prerequisites
