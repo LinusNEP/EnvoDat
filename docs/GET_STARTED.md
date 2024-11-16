@@ -1,5 +1,5 @@
-# Training, evaluation, and benchmarking of object detector and classifier models on EnvoData
-In this demo, we will demonstrate how to train supervised learning models on EnvoData, perform inference on new data, and evaluate the model's performance. We will walk through key steps, including model selection, training, benchmarking, and fine-tuning.
+# Train, evaluate, and benchmark supervised learning models on EnvoData
+In this demo, we will demonstrate how to train, evaluate, and benchmark supervised learning models on EnvoData. Further, we will demonstrate how to perform inference on new data and a walk-through on key steps in model selection and fine-tuning.
 
 ## Prerequisites
 - Python 3 installed on your system
