@@ -44,7 +44,7 @@ EnvoDat/
 └── README.md
 ```
 
-2.   For this demo, we will be using YOLOv8. Create a folder named dataset, and reorganize the downloaded annotation data in YOLO’s required directory structure as shown in the example below:
+2.   For this demo, we will be training the YOLOv8 model on MU-Hall data. Create a folder named dataset, and reorganize the downloaded annotation data in YOLO’s required directory structure as shown in the example below:
 ```
 dataset/
 ├── images/
@@ -56,7 +56,7 @@ dataset/
     ├── val/
     └── test/
 ```
-In each of the YOLOv* formats, we provide a configuration file named `envodata.yaml` which specifies the dataset paths and class names. If it does not exist, create one in the following form:
+In each of the scenes, we provide a YOLOv* configuration file named `envodata-*.yaml` which specifies the dataset paths and class names. If it does not exist, create one in the following form:
 
 ```yaml
 path: ../dataset  # Path to EnvoData dataset
@@ -82,42 +82,44 @@ names: ["class_name1", "class_name2", ..., "class_nameN"]
 2.	Train the model with the following command:
 ```bash
 # For YOLOv8
-yolo train model=yolov8n.pt data=envodata.yaml epochs=100 imgsz=640
+yolo train model=yolov8n.pt data=yolo train model=yolov8n.pt data=/.../dataset/envodata-mu-hall.yaml epochs=100 imgsz=640
+ epochs=100 imgsz=640
 
 # For YOLOv11
-yolo train model=yolov11s.pt data=envodata.yaml epochs=100 imgsz=640
+yolo train model=yolov11x.pt data=yolo train model=yolov11x.pt data=/.../dataset/envodata-mu-hall.yaml epochs=100 imgsz=640
+ epochs=100 imgsz=640
 ```
 Adjust the model and hyperparameters as needed (e.g., `model`, `epochs`, `batch size`) for optimal results:
 ```bash
 yolo train model=yolov11x.pt \
-    data=envodata.yaml \
+    data=/.../dataset/envodata-mu-hall.yaml \
     epochs=150 \		#Number of training epochs
     imgsz=640 \
-    batch=16 \
+    batch=16 \           #Batch size
     lr0=0.01 \			#Initial learning rate
     lrf=0.1 \			#Final learning rate
     momentum=0.937 \		#Momentum for SGD optimizer
     weight_decay=0.0005 \	#Regularization parameter
     save_period=10 \		#Save model every n epochs
     patience=50 \		#Number of epochs with no improvement after which training will be stopped
-    device=0 \			#Specify the device for training (cpu or cuda)
+    device=0 \			#Specify the device for training (CPU or GPU)
 ```
 3.	Models' Performance Evaluation
 
-After training, run validation to evaluate the performance on the validation data:
+After training, evaluate the performance on the validation data:
 ```bash
-validation_metrics = model.val(split='val')  # This automatically uses the validation split defined in envodata.yaml
+validation_metrics = model.val(split='val')  # This automatically uses the validation split defined in envodata-*.yaml
 ```
 You could also run the evaluation on the test set to see how the model performs on unseen data:
 ```bash
-test_metrics = model.val(split='test')  # This uses the test split from the envodata.yaml
+test_metrics = model.val(split='test')  # This uses the test split from the envodata-*.yaml
 ```
 Once you are done training, you can save the trained model weights for inference or for further fine-tuning:
 ```bash
 model.export(format='onnx')  # Export to ONNX format (alternatively use 'torchscript', 'engine' etc.)
 ```
 ## Run inference on multiple unseen images
-1.	Prepare new images: Ensure that all the new images that you want to run inference on are in a single directory.
+1.	Prepare new images: Ensure all the new images you want to run inference on are in a single directory.
 2.	You can use the following command to run inference on all the new images in the directory.
 ```bash
 yolo predict model=best.pt source=path/to/unseen_images
