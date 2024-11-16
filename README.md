@@ -37,6 +37,8 @@ If you use this work in your research, please cite our [paper](https://arxiv.org
     author = {Linus Nwankwo and Bjoern Ellensohn and Vedant Dave and Peter Hofer and Jan Forstner and Marlene Villneuve and Robert Galler and Elmar Rueckert},
     title = {EnvoDat: A Large-Scale Multisensory Dataset for Robotic Spatial Awareness and Semantic Reasoning in Heterogeneous Environments},
     note = {Project Website: \url{https://linusnep.github.io/EnvoDat/}},
+    eprint={2410.22200},
+    archivePrefix={arXiv},
     url={https://linusnep.github.io/EnvoDat/}
 }
 ```
