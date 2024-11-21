@@ -3,9 +3,6 @@
 
 ![Scenes Characteristics](./docs/scene_characteristics.gif)
 
-## Installations
-kindly refer to the [INSTALL.md](docs/INSTALL.md) for installing the necessary tools and dependencies.
-
 ## Getting Started
 To learn more about using EnvoDat for training, benchmarking, and evaluating supervised learning models and perception algorithms, kindly refer to [GET_STARTED.md](docs/GET_STARTED.md).
 
