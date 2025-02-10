@@ -124,12 +124,14 @@ model.export(format='onnx')  # Export to ONNX format (alternatively use 'torchsc
 yolo predict model=best.pt source=path/to/unseen_images
 ```
 Alternatively, you can simply run the following Python script:
-```unseenImgInference.py
+```python
+unseenImgInference.py
 ```
 ## Metrics and Analysis
 After training the model, the training results `results.csv` will be generated. You can analyse the validation losses, validation metrics (Precision, Recall, mAP), and learning rate over time using the following python script:
 
-```metrics_eval.py
+```python
+metrics_eval.py
 ```
 
 # Benchmark SoTA SLAM Algorithms
