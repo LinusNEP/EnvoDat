@@ -44,7 +44,7 @@ EnvoDat/
 └── README.md
 ```
 
-2.   For this demo, we will be training YOLOv8 model on the MU-Hall data. Create a folder named dataset, and reorganize the downloaded annotation data in YOLO’s required directory structure as shown in the example below:
+2.   For this demo, we will be training the YOLOv8 model on the MU-Hall data. Create a folder named dataset, and reorganise the downloaded annotation data in YOLO’s required directory structure as shown in the example below:
 ```
 dataset/
 ├── test/
