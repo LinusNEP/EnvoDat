@@ -4,7 +4,7 @@
 ![Scenes Characteristics](./docs/scene_characteristics.gif)
 
 ## Getting Started
-To learn more about using EnvoDat for training, benchmarking, and evaluating supervised learning models and perception algorithms, kindly refer to [GET_STARTED.md](docs/GET_STARTED.md).
+To learn more about using EnvoDat to train, benchmark, and evaluate supervised learning models and perception algorithms, please refer to [GET_STARTED.md](docs/GET_STARTED.md).
 
 ## Summary Video
 [![Summary video](docs/sumVideo.png)](https://youtu.be/5OcByVmTUPQ)
