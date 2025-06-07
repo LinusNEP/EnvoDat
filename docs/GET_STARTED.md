@@ -134,7 +134,5 @@ After training the model, the training results `results.csv` will be generated. 
 metrics_eval.py
 ```
 
-# Benchmark SoTA SLAM Algorithms
-## Details coming soon!
 
 
