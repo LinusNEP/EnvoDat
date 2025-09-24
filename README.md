@@ -4,7 +4,7 @@
 ![Scenes Characteristics](./docs/scene_characteristics.gif)
 
 ## Getting Started
-To learn more about using EnvoDat to train, benchmark, and evaluate supervised learning models and perception algorithms, please refer to [GET_STARTED.md](docs/GET_STARTED.md).
+To learn more about using EnvoDat to train, benchmark, and evaluate supervised learning models and perception algorithms, please take a look at [GET_STARTED.md](docs/GET_STARTED.md).
 
 ## Summary Video
 [![Summary video](docs/sumVideo.png)](https://youtu.be/5OcByVmTUPQ)
@@ -14,7 +14,7 @@ This work is licensed under a [Creative Commons Attribution International 4.0 Li
 
 ## Paper Citation
 
-If you use this work in your research, please cite our [paper](https://arxiv.org/abs/2410.22200) and [dataset](https://linusnep.github.io/EnvoDat/) using the following BibTeX entry:
+If you use this work in your research, please cite our [paper](https://ieeexplore.ieee.org/document/11127594) and [dataset](https://linusnep.github.io/EnvoDat/) using the following BibTeX entry:
 
 ```
 @INPROCEEDINGS{11127594,
