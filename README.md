@@ -17,15 +17,16 @@ This work is licensed under a [Creative Commons Attribution International 4.0 Li
 If you use this work in your research, please cite our [paper](https://arxiv.org/abs/2410.22200) and [dataset](https://linusnep.github.io/EnvoDat/) using the following BibTeX entry:
 
 ```
-@misc{nwankwo2024envodatlargescalemultisensorydataset,
-      title={EnvoDat: A Large-Scale Multisensory Dataset for Robotic Spatial Awareness and Semantic Reasoning in Heterogeneous Environments}, 
-      author={Linus Nwankwo and Bjoern Ellensohn and Vedant Dave and Peter Hofer and Jan Forstner and Marlene Villneuve and Robert Galler and Elmar Rueckert},
-      year={2024},
-      eprint={2410.22200},
-      archivePrefix={arXiv},
-      primaryClass={cs.RO},
-      url={https://arxiv.org/abs/2410.22200}, 
-}
+@INPROCEEDINGS{11127594,
+  author={Nwankwo, Linus and Ellensohn, Björn and Dave, Vedant and Hofer, Peter and Forstner, Jan and Villneuve, Marlene and Galler, Robert and Rueckert, Elmar},
+  booktitle={2025 IEEE International Conference on Robotics and Automation (ICRA)}, 
+  title={EnvoDat: A Large-Scale Multisensory Dataset for Robotic Spatial Awareness and Semantic Reasoning in Heterogeneous Environments}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={153-160},
+  keywords={Simultaneous localization and mapping;Annotations;Heuristic algorithms;Supervised learning;Semantics;Benchmark testing;Cognition;Spatial databases;Robustness;Sensors},
+  doi={10.1109/ICRA55743.2025.11127594}}
 ```
 
 ## Dataset Citation
