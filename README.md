@@ -16,7 +16,7 @@ This work is licensed under a [Creative Commons Attribution International 4.0 Li
 
 If you use this work in your research, please cite our [paper](https://ieeexplore.ieee.org/document/11127594) and [dataset](https://linusnep.github.io/EnvoDat/) using the following BibTeX entry:
 
-```
+```bibtex
 @INPROCEEDINGS{11127594,
   author={Nwankwo, Linus and Ellensohn, Björn and Dave, Vedant and Hofer, Peter and Forstner, Jan and Villneuve, Marlene and Galler, Robert and Rueckert, Elmar},
   booktitle={2025 IEEE International Conference on Robotics and Automation (ICRA)}, 
@@ -30,7 +30,7 @@ If you use this work in your research, please cite our [paper](https://ieeexplor
 ```
 
 ## Dataset Citation
-```
+```bibtex
 @software{envodat,
     author = {Linus Nwankwo and Bjoern Ellensohn and Vedant Dave and Peter Hofer and Jan Forstner and Marlene Villneuve and Robert Galler and Elmar Rueckert},
     title = {EnvoDat: A Large-Scale Multisensory Dataset for Robotic Spatial Awareness and Semantic Reasoning in Heterogeneous Environments},
