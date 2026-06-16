@@ -42,9 +42,9 @@ The annotated data is available from the [EnvoDat download page](https://sites.g
 
 ```
 EnvoDat/
-├── Indoors/        # e.g. mu-hall, mu-cor, mu-txn
-├── Outdoors/       # e.g. leo-str
-├── SubTunnels/     # e.g. subt-zab
+├── Indoors/        
+├── Outdoors/       
+├── SubTunnels/    
 └── README.md
 ```
 
