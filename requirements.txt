@@ -1,5 +1,4 @@
-# EnvoDat: Python dependencies for the YOLO training / inference / metrics.
-#
+# Python dependencies for the YOLO training/inference/metrics.
 # Install:
 #     python3 -m venv EnvoDatEnv
 #     source EnvoDatEnv/bin/activate
