@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use EnvoDat in your research, please cite the paper below."
+message: "If you use EnvoDat in your research, please cite the corresponding paper below."
 title: "EnvoDat: A Large-Scale Multisensory Dataset for Robotic Spatial Awareness and Semantic Reasoning in Heterogeneous Environments"
 type: dataset
 authors:
