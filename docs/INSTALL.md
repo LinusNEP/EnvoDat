@@ -6,7 +6,7 @@ This guide sets up the environment for the EnvoDat development kit: the object-d
 
 | Component | Minimum | Recommended |
 | --------- | ------- | ----------- |
-| OS        | Ubuntu 20.04 / 22.04 (also works on macOS, WSL2) | Ubuntu 22.04 |
+| OS        | Ubuntu 20.04 / 22.04 (also works on macOS, Windows) | Ubuntu 22.04 |
 | Python    | 3.8     | 3.10+ |
 | RAM       | 8 GB    | 16 GB+ |
 | GPU       | optional | NVIDIA GPU with CUDA 11.8+ for training |
