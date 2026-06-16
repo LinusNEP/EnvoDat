@@ -17,7 +17,7 @@
   <img src="docs/scene_characteristics.gif" alt="Scene characteristics">
 </div>
 
---
+---
 
 ## Overview
 
