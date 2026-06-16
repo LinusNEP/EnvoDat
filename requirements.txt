@@ -1,0 +1,14 @@
+# EnvoDat: Python dependencies for the YOLO training / inference / metrics.
+#
+# Install:
+#     python3 -m venv EnvoDatEnv
+#     source EnvoDatEnv/bin/activate
+#     pip install -r requirements.txt
+
+ultralytics>=8.3.0,<9.0.0
+torch>=2.1,<3.0
+torchvision>=0.16,<1.0
+opencv-python>=4.8,<5.0
+matplotlib>=3.7,<4.0
+pandas>=2.0,<3.0
+numpy>=1.24,<2.0

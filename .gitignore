@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual environments
+EnvoDatEnv/
+venv/
+.venv/
+env/
+
+# Datasets & weights
+data/
+dataset/
+*.pt
+*.onnx
+*.engine
+*.torchscript
+*.zip
+*.tar
+*.tar.gz
+
+# Training / inference outputs
+runs/
+results.csv
+wandb/
+
+# Notebooks & caches
+.ipynb_checkpoints/
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

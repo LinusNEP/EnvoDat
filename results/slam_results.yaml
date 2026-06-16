@@ -1,0 +1,75 @@
+# EnvoDat SLAM leaderboard data
+# --------------------------------
+# Metric conventions:
+#   ate_rmse : Absolute Trajectory Error [m]      -> lower is better
+#   rpe_rmse : Relative Pose Error (delta=1) [m]  -> lower is better
+#   sd       : Scale Drift (optimal = 1.0, <1 underestimates scale, >1 overestimates; best = closest to 1)
+
+track: slam
+scenes:
+  - id: mu-hall-01
+    label: "MU-Hall-01"
+    characteristic: "Dynamic entities"
+  - id: mu-txn-01
+    label: "MU-TXN-01"
+    characteristic: "Varying illumination, opaque surfaces"
+  - id: subt-zab-01
+    label: "SubT-ZAB-01"
+    characteristic: "Zero/partial visibility"
+  - id: mu-cor-03
+    label: "MU-Cor-03 (night)"
+    characteristic: "Zero/partial visibility"
+  - id: leo-str-01
+    label: "Leo-Str-01"
+    characteristic: "High-dimensional, feature-sparse"
+
+entries:
+  - algorithm: "FAST-LIO2"
+    category: "LiDAR (filter)"
+    reference: "Xu et al., 2022"
+    results:
+      mu-hall-01:  {ate_rmse: [1.15, 0.67],   rpe_rmse: [0.01, 0.00], sd: [1.13, 0.70]}
+      mu-txn-01:   {ate_rmse: [1.51, 0.82],   rpe_rmse: [0.01, 0.00], sd: [1.67, 4.09]}
+      subt-zab-01: {ate_rmse: [9.77, 13.51],  rpe_rmse: [1.13, 0.40], sd: [1.95, 6.40]}
+      mu-cor-03:   {ate_rmse: [0.87, 0.30],   rpe_rmse: [0.00, 0.00], sd: [1.03, 0.67]}
+      leo-str-01:  {ate_rmse: [2.50, 0.40],   rpe_rmse: [0.04, 0.00], sd: [1.02, 0.58]}
+
+  - algorithm: "DLIO"
+    category: "LiDAR (filter)"
+    reference: "Chen et al., 2023"
+    results:
+      mu-hall-01:  {ate_rmse: [1.14, 0.49],   rpe_rmse: [0.04, 0.00], sd: [1.10, 0.50]}
+      mu-txn-01:   {ate_rmse: [2.64, 1.14],   rpe_rmse: [0.03, 0.00], sd: [2.19, 6.34]}
+      subt-zab-01: {ate_rmse: [6.93, 8.81],   rpe_rmse: [0.29, 0.00], sd: [1.45, 3.94]}
+      mu-cor-03:   {ate_rmse: [3.29, 2.47],   rpe_rmse: [0.04, 0.00], sd: [1.19, 3.19]}
+      leo-str-01:  {ate_rmse: [1.76, 1.65],   rpe_rmse: [0.05, 0.00], sd: [1.12, 2.05]}
+
+  - algorithm: "HDL-SLAM"
+    category: "LiDAR (graph)"
+    reference: "Koide et al., 2019"
+    results:
+      mu-hall-01:  {ate_rmse: [17.78, 7.76],  rpe_rmse: [0.04, 0.00], sd: [1.89, 3.97]}
+      mu-txn-01:   {ate_rmse: [45.86, 21.44], rpe_rmse: [0.07, 0.00], sd: [1.58, 4.11]}
+      subt-zab-01: {ate_rmse: [7.54, 4.90],   rpe_rmse: [0.29, 0.00], sd: [1.22, 3.32]}
+      mu-cor-03:   {ate_rmse: [5.12, 3.83],   rpe_rmse: [0.09, 0.00], sd: [0.98, 0.65]}
+      leo-str-01:  {ate_rmse: [3.29, 6.60],   rpe_rmse: [0.12, 0.00], sd: [1.43, 8.02]}
+
+  - algorithm: "RTAB-Map"
+    category: "Visual"
+    reference: "Labbe & Michaud, 2019"
+    results:
+      mu-hall-01:  {ate_rmse: [12.36, 6.85],  rpe_rmse: [0.03, 0.00], sd: [0.24, 4.37]}
+      mu-txn-01:   {ate_rmse: [46.06, 22.23], rpe_rmse: [0.08, 0.00], sd: [2.05, 4.58]}
+      subt-zab-01: {ate_rmse: dnf,            rpe_rmse: dnf,          sd: dnf}
+      mu-cor-03:   {ate_rmse: [3.25, 2.15],   rpe_rmse: [0.09, 0.00], sd: [0.94, 0.89]}
+      leo-str-01:  {ate_rmse: [5.63, 2.64],   rpe_rmse: [0.09, 0.00], sd: [0.46, 8.37]}
+
+  - algorithm: "ORB-SLAM3"
+    category: "Visual"
+    reference: "Campos et al., 2021"
+    results:
+      mu-hall-01:  {ate_rmse: [23.37, 9.99],  rpe_rmse: [0.04, 0.00], sd: [0.88, 2.72]}
+      mu-txn-01:   {ate_rmse: [21.93, 10.31], rpe_rmse: [0.05, 0.00], sd: [1.89, 6.99]}
+      subt-zab-01: {ate_rmse: dnf,            rpe_rmse: dnf,          sd: dnf}
+      mu-cor-03:   {ate_rmse: [54.74, 35.04], rpe_rmse: [0.05, 0.00], sd: [0.13, 1.58]}
+      leo-str-01:  {ate_rmse: [53.98, 24.86], rpe_rmse: [0.08, 0.00], sd: [0.03, 0.15]}

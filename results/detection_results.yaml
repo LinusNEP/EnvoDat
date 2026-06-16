@@ -1,0 +1,45 @@
+# EnvoDat detection leaderboard data
+# ------------------------------------
+track: detection
+training:
+  lr: 0.00025
+  batch: 16
+  epochs: 150
+  split: "70/20/10"
+
+entries:
+  - model: "YOLOv8"
+    reference: "Jocher et al., 2023"
+    results:
+      map50: 71.85
+      map5095: 61.00
+      precision: 72.85
+      recall: 68.90
+      f1: 0.709
+      inference_ms: 8.75
+      fps: 114.29
+      memory_gb: 4.71
+
+  - model: "Fast R-CNN"
+    reference: "Girshick, 2015"
+    results:
+      map50: 60.40
+      map5095: 42.10
+      precision: 50.40
+      recall: 48.50
+      f1: 0.54
+      inference_ms: 20.20
+      fps: 49.50
+      memory_gb: 16.70
+
+  - model: "Detectron2"
+    reference: "Wu et al., 2019"
+    results:
+      map50: 50.10
+      map5095: 41.70
+      precision: 50.01
+      recall: 48.65
+      f1: 0.54
+      inference_ms: 18.20
+      fps: 54.95
+      memory_gb: 16.10

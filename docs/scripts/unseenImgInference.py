@@ -1,12 +1,9 @@
 #!/usr/bin/env python
-
 import argparse
 import os
 import subprocess
-
 import cv2
 import matplotlib.pyplot as plt
-
 
 def run_inference(model_path, source_dir, project, name, conf_threshold):
     command = [
@@ -22,7 +19,6 @@ def run_inference(model_path, source_dir, project, name, conf_threshold):
     ]
     subprocess.run(command, check=True)
 
-
 def draw_boxes(image_rgb, labels_path):
     if not (labels_path and os.path.exists(labels_path)):
         return image_rgb
@@ -32,8 +28,7 @@ def draw_boxes(image_rgb, labels_path):
         for line in f:
             parts = line.strip().split()
             if len(parts) < 5:
-                continue  
-            # parts = [class, x_center, y_center, width, height, (conf)]
+                continue 
             _, x_c, y_c, bw, bh = map(float, parts[:5])
             x1 = int((x_c - bw / 2) * w)
             y1 = int((y_c - bh / 2) * h)
@@ -42,7 +37,6 @@ def draw_boxes(image_rgb, labels_path):
             cv2.rectangle(image_rgb, (x1, y1), (x2, y2), (255, 0, 0), 2)
     return image_rgb
 
-
 def show_image(image_rgb, title=None):
     plt.figure(figsize=(10, 10))
     plt.imshow(image_rgb)
@@ -50,7 +44,6 @@ def show_image(image_rgb, title=None):
     if title:
         plt.title(title)
     plt.show()
-
 
 def main():
     parser = argparse.ArgumentParser(description="YOLO inference + box visualisation on unseen images.")

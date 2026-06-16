@@ -1,0 +1,51 @@
+cff-version: 1.2.0
+message: "If you use EnvoDat in your research, please cite the paper below."
+title: "EnvoDat: A Large-Scale Multisensory Dataset for Robotic Spatial Awareness and Semantic Reasoning in Heterogeneous Environments"
+type: dataset
+authors:
+  - family-names: "Nwankwo"
+    given-names: "Linus"
+  - family-names: "Ellensohn"
+    given-names: "Björn"
+  - family-names: "Dave"
+    given-names: "Vedant"
+  - family-names: "Hofer"
+    given-names: "Peter"
+  - family-names: "Forstner"
+    given-names: "Jan"
+  - family-names: "Villneuve"
+    given-names: "Marlene"
+  - family-names: "Galler"
+    given-names: "Robert"
+  - family-names: "Rueckert"
+    given-names: "Elmar"
+url: "https://linusnep.github.io/EnvoDat/"
+repository-code: "https://github.com/LinusNEP/EnvoDat"
+license: CC-BY-4.0
+preferred-citation:
+  type: conference-paper
+  title: "EnvoDat: A Large-Scale Multisensory Dataset for Robotic Spatial Awareness and Semantic Reasoning in Heterogeneous Environments"
+  authors:
+    - family-names: "Nwankwo"
+      given-names: "Linus"
+    - family-names: "Ellensohn"
+      given-names: "Björn"
+    - family-names: "Dave"
+      given-names: "Vedant"
+    - family-names: "Hofer"
+      given-names: "Peter"
+    - family-names: "Forstner"
+      given-names: "Jan"
+    - family-names: "Villneuve"
+      given-names: "Marlene"
+    - family-names: "Galler"
+      given-names: "Robert"
+    - family-names: "Rueckert"
+      given-names: "Elmar"
+  collection-title: "2025 IEEE International Conference on Robotics and Automation (ICRA)"
+  conference:
+    name: "2025 IEEE International Conference on Robotics and Automation (ICRA)"
+  year: 2025
+  start: 153
+  end: 160
+  doi: "10.1109/ICRA55743.2025.11127594"
