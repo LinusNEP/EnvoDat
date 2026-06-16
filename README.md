@@ -95,7 +95,7 @@ If you use this work in your research, please cite our [paper](https://ieeexplor
   keywords={Simultaneous localization and mapping;Annotations;Heuristic algorithms;Supervised learning;Semantics;Benchmark testing;Cognition;Spatial databases;Robustness;Sensors},
   doi={10.1109/ICRA55743.2025.11127594}}
 ```
-## Paper Citation
+## Dataset
 
 ```bibtex
 @software{envodat,
