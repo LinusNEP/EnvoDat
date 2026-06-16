@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 
 
 def run_inference(model_path, source_dir, project, name, conf_threshold):
-    """Call the Ultralytics CLI to predict and save label files."""
     command = [
         "yolo", "predict",
         f"model={model_path}",
@@ -25,7 +24,6 @@ def run_inference(model_path, source_dir, project, name, conf_threshold):
 
 
 def draw_boxes(image_rgb, labels_path):
-    """Draw YOLO-format boxes (normalised xywh) onto an RGB image array."""
     if not (labels_path and os.path.exists(labels_path)):
         return image_rgb
 
@@ -34,7 +32,7 @@ def draw_boxes(image_rgb, labels_path):
         for line in f:
             parts = line.strip().split()
             if len(parts) < 5:
-                continue  # malformed row
+                continue  
             # parts = [class, x_center, y_center, width, height, (conf)]
             _, x_c, y_c, bw, bh = map(float, parts[:5])
             x1 = int((x_c - bw / 2) * w)
