@@ -23,7 +23,7 @@ dataset/
 *.tar
 *.tar.gz
 
-# Training / inference outputs
+# Training/inference outputs
 runs/
 results.csv
 wandb/
@@ -32,7 +32,7 @@ wandb/
 .ipynb_checkpoints/
 *.log
 
-# OS / editor
+# OS/editor
 .DS_Store
 Thumbs.db
 .idea/
