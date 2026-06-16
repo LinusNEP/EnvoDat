@@ -1,14 +1,12 @@
 # Contributing to EnvoDat
 
-Thanks for your interest in improving EnvoDat! Contributions are welcome for bug
-fixes, documentation, tooling, and especially new benchmark results.
+Thanks for your interest in improving EnvoDat!
+
+Contributions are welcome for bug fixes, documentation, tooling, and especially new benchmark results.
 
 ## Reporting issues
 
-Open an issue with: what you ran (command/config), what you expected, what
-happened, and your environment (`python --version`, OS, GPU, and `pip freeze`
-for the relevant packages). For dataset problems, include the scene id and
-format.
+Open an issue with: what you ran (command/config), what you expected, what happened, and your environment (`python --version`, OS, GPU, and `pip freeze` for the relevant packages). For dataset problems, include the scene id and format.
 
 ## Development setup
 
@@ -43,7 +41,7 @@ the data files in [`results/`](results/). To add a result:
    - the diff to the relevant `results/*.yaml`,
    - the regenerated `docs/BENCHMARK.md`,
    - the exact command/config used,
-   - a link to logs, a short report, or a config file so the result can be
+   - a link to logs, a short report, or a config file, so the result can be
      checked.
 
 ### Result guidelines
