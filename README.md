@@ -23,16 +23,16 @@
 
 EnvoDat is a large-scale, multisensory robotics dataset captured across **heterogeneous indoor, outdoor, and subterranean environments**, with annotations and ground truth designed for two families of tasks:
 
-1. **Spatial awareness** — SLAM and odometry benchmarking under dynamic entities, varying illumination, opaque surfaces, low/zero-visibility, and feature-sparse conditions.
-2. **Semantic reasoning** — object detection and semantic perception on non-standard objects, terrain, and lighting that differ from common household/urban datasets.
+1. **Spatial awareness:** SLAM and odometry benchmarking under dynamic entities, varying illumination, opaque surfaces, low/zero-visibility, and feature-sparse conditions.
+2. **Semantic reasoning:** Object detection and semantic perception on non-standard objects, terrain, and lighting that differ from common household/urban datasets.
 
-This repository is the **development and benchmarking kit** for the dataset. It provides the tooling to reproduce the perception experiments, evaluate SLAM trajectories, and submit results to the public leaderboard. The raw sensor data and annotations are hosted separately (see [Download](#download)).
+This repository provides the **development and benchmarking kit**. It includes the tool to reproduce the perception experiments, evaluate SLAM trajectories, and submit results to the public leaderboard. The raw sensor data and annotations are hosted separately (see [Download](#download)).
 
 ## Summary Video
 
 <p align="center">
   <a href="https://youtu.be/5OcByVmTUPQ">
-    <img src="docs/sumVideo.png" alt="Summary video" width="600">
+    <img src="docs/sumVideo.png" alt="Summary video" width="500">
   </a>
 </p>
 
