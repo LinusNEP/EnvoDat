@@ -32,7 +32,7 @@ This repository is the **development and benchmarking kit** for the dataset. It 
 
 <p align="center">
   <a href="https://youtu.be/5OcByVmTUPQ">
-    <img src="docs/sumVideo.png" alt="Summary video">
+    <img src="docs/sumVideo.png" alt="Summary video" width="800">
   </a>
 </p>
 
