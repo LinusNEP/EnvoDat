@@ -3,7 +3,7 @@
 # Metric conventions:
 #   ate_rmse : Absolute Trajectory Error [m]      -> lower is better
 #   rpe_rmse : Relative Pose Error (delta=1) [m]  -> lower is better
-#   sd       : Scale Drift (optimal = 1.0, <1 underestimates scale, >1 overestimates; best = closest to 1)
+#   sd       : Scale Drift (optimal = 1.0, <1 underestimates scale, >1 overestimates scale; best = closest to 1)
 
 track: slam
 scenes:
