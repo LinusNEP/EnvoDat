@@ -29,9 +29,12 @@ EnvoDat is a large-scale, multisensory robotics dataset captured across **hetero
 This repository is the **development and benchmarking kit** for the dataset. It provides the tooling to reproduce the perception experiments, evaluate SLAM trajectories, and submit results to the public leaderboard. The raw sensor data and annotations are hosted separately (see [Download](#download)).
 
 ## Summary Video
-<div align="center">
-[![Summary video](docs/sumVideo.png)](https://youtu.be/5OcByVmTUPQ)
-</div>
+
+<p align="center">
+  <a href="https://youtu.be/5OcByVmTUPQ">
+    <img src="docs/sumVideo.png" alt="Summary video">
+  </a>
+</p>
 
 ## Download
 
