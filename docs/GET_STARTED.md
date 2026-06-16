@@ -1,8 +1,8 @@
 # Train, evaluate, and benchmark supervised learning models on EnvoDat
-In this demo, we will demonstrate how to train, evaluate, and benchmark supervised learning models on EnvoDat. Further, we will demonstrate how to perform inference on new data and a walk-through on key steps in model selection and fine-tuning.
+In this demo, we will demonstrate how to train, evaluate, and benchmark supervised learning models on EnvoDat. Further, we will demonstrate how to perform inference on new data and provide a walk-through on key steps in model selection and fine-tuning.
 
 ## Prerequisites
-- Python 3 installed on your system
+- Python 3 is installed on your system
 - Basic knowledge of Python and command-line operations
 - GPU for faster training (optional but recommended)
 
@@ -27,7 +27,7 @@ pip install pandas matplotlib
 ```
 
 ## Prepare the EnvoData Dataset
-1.   Download the annotated data at [EnvoDat annotations](https://sites.google.com/view/envodat/download). Depending on your task, download only the format that satisfies your requirements e.g., YOLOv*, COCO, OpenAI-CLIP, VOC, etc. We organised the EnvoDat dataset in the hierarchical structure shown below:
+1.   Download the annotated data at [EnvoDat annotations](https://sites.google.com/view/envodat/download). Depending on your task, download only the format that satisfies your requirements, e.g., YOLOv*, COCO, OpenAI-CLIP, VOC, etc. We organised the EnvoDat dataset in the hierarchical structure shown below:
 
 ```
 EnvoDat/
@@ -97,8 +97,8 @@ yolo train model=yolov11x.pt \
     batch=16 \           #Batch size
     lr0=0.01 \			#Initial learning rate
     lrf=0.1 \			#Final learning rate
-    momentum=0.937 \		#Momentum for SGD optimizer
-    weight_decay=0.0005 \	#Regularization parameter
+    momentum=0.937 \		#Momentum for SGD optimiser
+    weight_decay=0.0005 \	# Regularisation parameter
     save_period=10 \		#Save model every n epochs
     patience=50 \		#Number of epochs with no improvement after which training will be stopped
     device=0 \			#Specify the device for training (CPU or GPU)
@@ -125,7 +125,12 @@ yolo predict model=best.pt source=path/to/unseen_images
 ```
 Alternatively, you can simply run the following Python script:
 ```python
-unseenImgInference.py
+python unseenImgInference.py \
+        --model runs/detect/train/weights/best.pt \
+        --source path/to/unseen_images \
+        --project runs/detect \
+        --name exp \
+        --conf 0.4
 ```
 ## Metrics and Analysis
 After training the model, the training results `results.csv` will be generated. You can analyse the validation losses, validation metrics (Precision, Recall, mAP), and learning rate over time using the following python script:
