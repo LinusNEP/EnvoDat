@@ -48,7 +48,7 @@ EnvoDat/
 └── README.md
 ```
 
-A helper script verifies integrity after download:
+Use the following script to verify the integrity after download:
 
 ```bash
 python docs/scripts/download_envodat.py --scene mu-hall --format yolo --out ./data
