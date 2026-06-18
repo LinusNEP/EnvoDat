@@ -54,7 +54,7 @@ Use the following script to verify the integrity after download:
 python docs/scripts/download_envodat.py --scene mu-hall --format yolo --out ./data
 ```
 
-## Quickstart (object detection)
+## Quickstart
 
 ```bash
 git clone https://github.com/LinusNEP/EnvoDat.git
