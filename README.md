@@ -4,12 +4,12 @@
 
 **A Large-Scale Multisensory Dataset for Robotic Spatial Awareness and Semantic Reasoning in Heterogeneous Environments**
 
-🌐 [![Project Website](https://img.shields.io/badge/Project-Website-1f72b8.svg)](https://linusnep.github.io/EnvoDat/)
-📄 [![Paper (ICRA 2025)](https://img.shields.io/badge/Paper-ICRA%202025-b31b1b.svg)](https://ieeexplore.ieee.org/document/11127594)
-📚 [![arXiv](https://img.shields.io/badge/arXiv-2410.22200-b31b1b.svg)](https://arxiv.org/abs/2410.22200)
-⚖️ [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![Project Website](https://img.shields.io/badge/Project-Website-1f72b8.svg)](https://linusnep.github.io/EnvoDat/)
+[![Paper (ICRA 2025)](https://img.shields.io/badge/Paper-ICRA%202025-b31b1b.svg)](https://ieeexplore.ieee.org/document/11127594)
+[![arXiv](https://img.shields.io/badge/arXiv-2410.22200-b31b1b.svg)](https://arxiv.org/abs/2410.22200)
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
-🌐 [Website](https://linusnep.github.io/EnvoDat/) | 🚀 [Get Started](docs/GET_STARTED.md) | ⚙️ [Install](docs/INSTALL.md) | 🏆 [Leaderboard](docs/BENCHMARK.md) | 📥 [Download](https://sites.google.com/view/envodat/download)
+🌐 [Website](https://linusnep.github.io/EnvoDat/) | 🚀 [Get Started](docs/GET_STARTED.md) | ⚙️ [Install](docs/INSTALL.md) | 🏆 [Leaderboard](docs/BENCHMARK.md) | 📥 [Download](https://sites.google.com/view/envodat/download) | ⚖️ [License](https://creativecommons.org/licenses/by/4.0/)
 
 <img src="docs/scene_characteristics.gif" alt="Scene characteristics">
 
