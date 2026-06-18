@@ -9,9 +9,7 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2410.22200-b31b1b.svg)](https://arxiv.org/abs/2410.22200)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
-[Website](https://linusnep.github.io/EnvoDat/) | [Get Started](docs/GET_STARTED.md) | [Install](docs/INSTALL.md) | [Leaderboard](docs/BENCHMARK.md) | [Download](https://sites.google.com/view/envodat/download)
-
-</div>
+🌐 [Website](https://linusnep.github.io/EnvoDat/) | 🚀 [Get Started](docs/GET_STARTED.md) | ⚙️ [Install](docs/INSTALL.md) | 🏆 [Leaderboard](docs/BENCHMARK.md) | 📥 [Download](https://sites.google.com/view/envodat/download)
 
 <div align="center">
   <img src="docs/scene_characteristics.gif" alt="Scene characteristics">
@@ -38,7 +36,7 @@ This repository provides the **development and benchmarking kit**. It includes t
 
 ## Download
 
-The annotated data is available from the [EnvoDat download page](https://sites.google.com/view/envodat/download). Pick only the format your task needs (YOLO, COCO, OpenAI-CLIP, VOC, …). The data is organised hierarchically:
+The annotated data is available at [EnvoDat download page](https://sites.google.com/view/envodat/download). Pick only the format your task needs (YOLO, COCO, OpenAI-CLIP, VOC, …). The data is organised hierarchically:
 
 ```
 EnvoDat/
@@ -48,7 +46,7 @@ EnvoDat/
 └── README.md
 ```
 
-Use the following script to verify the integrity after download:
+Use the following script to verify the integrity after download, e.g., for mu-hall, yolo format:
 
 ```bash
 python docs/scripts/download_envodat.py --scene mu-hall --format yolo --out ./data
