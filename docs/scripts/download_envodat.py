@@ -4,8 +4,8 @@ Download EnvoDat programmatically, e.g. for training or evaluation.
 
 Usage:
     python download_envodat.py --scene mu-hall --format yolo --out ./data
-    python download_envodat.py --all --out ./data            # everything in manifest
-    python download_envodat.py --list                        # show manifest entries
+    python download_envodat.py --all --out ./data           
+    python download_envodat.py --list                       
 """
 
 import argparse
