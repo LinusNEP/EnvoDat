@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 """This script generates the EnvoDat benchmark leaderboard markdown from YAML results.
-Usage:
-    python docs/scripts/generate_leaderboard.py
-    python docs/scripts/generate_leaderboard.py \
-        --slam results/slam_results.yaml \
-        --detection results/detection_results.yaml \
-        --out docs/BENCHMARK.md
 """
-
 import argparse
 import datetime as dt
 import os
