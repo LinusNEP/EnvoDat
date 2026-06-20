@@ -15,8 +15,3 @@ files:
     url: "REPLACE_WITH_DIRECT_DOWNLOAD_URL/mu-hall_coco.zip"
     sha256: ""
     size_bytes: null
-
-  # Add one block per (scene, format) you publish:
-  # Indoors:  mu-hall, mu-cor, mu-txn
-  # Outdoors: leo-str
-  # SubTunnels: subt-zab
