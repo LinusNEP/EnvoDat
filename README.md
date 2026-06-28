@@ -106,8 +106,6 @@ If you use this work in your research, please cite our [paper](https://ieeexplor
 }
 ```
 
-A machine-readable version is in [`CITATION.cff`](CITATION.cff).
-
 ## License
 
 The dataset and documentation are licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
