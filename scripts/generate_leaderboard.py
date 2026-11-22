@@ -75,10 +75,8 @@ def render_slam(data):
 
     out = ["## SLAM track\n"]
     out.append(
-        "Five SOTA SLAM systems on five representative EnvoDat scenes. ATE/RPE: "
-        "lower is better. Scale Drift (SD): **optimum is 1.0** (values < 1 "
-        "underestimate, > 1 overestimate scale). **Bold** = best per scene; "
-        "DNF = tracking lost / did not complete; — = not reported.\n"
+        "Five SOTA SLAM methods on five representative EnvoDat scenes. ATE/RPE: " "lower is better. Scale Drift (SD): **optimum is 1.0** (values < 1 "
+        "underestimate, > 1 overestimate scale). **Bold** = best per scene; "  "DNF = tracking lost / did not complete; — = not reported.\n"
     )
     out.append("| Scene | Dominant challenge |")
     out.append("| ----- | ------------------ |")
