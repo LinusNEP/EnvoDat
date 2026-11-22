@@ -9,7 +9,6 @@ def load_training_results(file_path):
 
 # Training and validation losses
 def plot_losses(df):
-    # Extract relevant columns
     train_box_loss = df['train/box_loss']
     train_cls_loss = df['train/cls_loss']
     train_dfl_loss = df['train/dfl_loss']
