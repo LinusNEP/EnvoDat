@@ -19,12 +19,12 @@
 
 ## Overview
 
-EnvoDat is a large-scale, multisensory robotics dataset captured across **heterogeneous indoor, outdoor, and subterranean environments**, with annotations and ground truth designed for two families of tasks:
+EnvoDat is a large-scale, multisensory robotics dataset captured across **heterogeneous indoor, outdoor, and subterranean environments**, with annotations and ground truth designed for tasks such as:
 
 1. **Spatial awareness:** SLAM and odometry benchmarking under dynamic entities, varying illumination, opaque surfaces, low/zero-visibility, and feature-sparse conditions.
 2. **Semantic reasoning:** Object detection and semantic perception on non-standard objects, terrain, and lighting that differ from common household/urban datasets.
 
-This repository provides the **development and benchmarking kit**. It includes the tool to reproduce the perception experiments, evaluate SLAM trajectories, and submit results to the public leaderboard. The raw sensor data and annotations are hosted separately (see [Download](#download)).
+Here, we provide the **Development and benchmarking kit** to reproduce the perception experiments, evaluate SLAM trajectories, and submit results to the public leaderboard. The raw sensor data and annotations are hosted separately (see [Download](#download)).
 
 ## Summary Video
 
@@ -36,21 +36,7 @@ This repository provides the **development and benchmarking kit**. It includes t
 
 ## Download
 
-The annotated data is available at [EnvoDat download page](https://sites.google.com/view/envodat/download). Pick only the format your task needs (YOLO, COCO, OpenAI-CLIP, VOC, …). The data is organised hierarchically:
-
-```
-EnvoDat/
-├── Indoors/        
-├── Outdoors/       
-├── SubTunnels/    
-└── README.md
-```
-
-Use the following script to verify the integrity after download, e.g., for mu-hall, yolo format:
-
-```bash
-python docs/scripts/download_envodat.py --scene mu-hall --format yolo --out ./data
-```
+The annotated data is available at [EnvoDat Download](https://sites.google.com/view/envodat/download). The data is provided in different formats (e.g., YOLO, COCO, OpenAI-CLIP, VOC, …).
 
 ## Quickstart
 
@@ -73,7 +59,7 @@ Full instructions, including dataset layout and the YOLO config file, are in [`d
 The public leaderboard can be found in [`docs/BENCHMARK.md`](docs/BENCHMARK.md) and covers two tracks:
 
 - **SLAM track** — RTAB-Map, ORB-SLAM3, HDL-SLAM, FAST-LIO2, DLIO across five representative scenes, scored by ATE, RPE, and scale drift.
-- **Detection track** — object detectors scored by mAP on EnvoDat scenes.
+- **Detection track** — object detectors evaluated with mAP on EnvoDat scenes.
 
 To reproduce or contribute results, see [How to submit](docs/BENCHMARK.md#how-to-submit) and [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
