@@ -63,7 +63,6 @@ def plot_validation_metrics(df):
 
 # Learning rate over time
 def plot_learning_rate(df):
-    # Assuming you want to plot the learning rate from the first group (pg0)
     learning_rate = df['lr/pg0']
     epochs = df['epoch']
 
