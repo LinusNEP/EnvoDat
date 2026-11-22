@@ -1,5 +1,5 @@
 # Train, evaluate, and benchmark supervised learning models on EnvoDat
-In this demo, we will demonstrate how to train, evaluate, and benchmark supervised learning models on EnvoDat. Further, we will demonstrate how to perform inference on new data and provide a walk-through on key steps in model selection and fine-tuning.
+In this demo, we show how to train, evaluate, and benchmark supervised learning models on EnvoDat. Further, we show how to perform inference on new data and provide a walk-through on key steps in model selection and fine-tuning.
 
 ## Prerequisites
 - Python 3 is installed on your system
@@ -44,7 +44,7 @@ EnvoDat/
 └── README.md
 ```
 
-2.   For this demo, we will be training the YOLOv8 model on the MU-Hall data. Create a folder named dataset, and reorganise the downloaded annotation data in YOLO’s required directory structure as shown in the example below:
+2.   For this demo, we show how to train YOLOv8 model on the MU-Hall data. Create a folder named dataset, and reorganise the downloaded annotation data in YOLO’s required directory structure as shown in the example below:
 ```
 dataset/
 ├── test/
@@ -58,7 +58,7 @@ dataset/
 │   └── labels/
 └── envodata-mu-hall.yaml
 ```
-In each of the scenes, we provide a YOLOv* configuration file named `envodata-*.yaml` which specifies the dataset paths and class names. If it does not exist, create one in the following form:
+In each of the scenes, provide a YOLOv* configuration file named `envodata-*.yaml` which specifies the dataset paths and class names. If it does not exist, create one in the following form:
 
 ```yaml
 train: ../train/images	

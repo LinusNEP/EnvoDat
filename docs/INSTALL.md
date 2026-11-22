@@ -1,6 +1,6 @@
 # Installation
 
-This guide sets up the environment for the EnvoDat development kit: the object-detection demo, the trajectory-evaluation tooling, and the leaderboard scripts.
+This guide sets up the environment for the EnvoDat development kit: the object-detection, the trajectory-evaluation tools, and the leaderboard scripts.
 
 ## 1. System requirements
 
@@ -12,7 +12,7 @@ This guide sets up the environment for the EnvoDat development kit: the object-d
 | GPU       | optional | NVIDIA GPU with CUDA 11.8+ for training |
 | Disk      | depends on how many scenes/formats you download | 50 GB+ free |
 
-The detection demo runs CPU-only; a GPU mainly speeds up training. The SLAM evaluation tooling is CPU-only.
+The detection runs CPU-only; a GPU mainly speeds up training. The SLAM evaluation tools is CPU-only.
 
 ## 2. Clone the repository
 
@@ -49,23 +49,23 @@ This installs `ultralytics` (YOLOv8–YOLO11), `torch`/`torchvision`, OpenCV, pa
 
 ## 5. (Optional) SLAM evaluation
 
-The leaderboard's SLAM track scores trajectories with **ATE/RPE** via [`evo`](https://github.com/MichaelGrupp/evo):
+The leaderboard's SLAM track evaluates trajectories with **ATE/RPE** via [`evo`](https://github.com/MichaelGrupp/evo):
 
 ```bash
 pip install evo --upgrade --no-binary evo
 ```
 
-The SLAM pipelines (RTAB-Map, ORB-SLAM3, HDL-SLAM, FAST-LIO2, DLIO) are **not** redistributed here. Install them from their upstream repositories, run them on the EnvoDat sequences to produce estimated trajectories, then score those trajectories with `docs/scripts/evaluate_slam.py`. Most of these are ROS packages; see each project's instructions for ROS 1/2 setup.
+The SLAM pipelines (RTAB-Map, ORB-SLAM3, HDL-SLAM, FAST-LIO2, DLIO) are **not** redistributed here. Install them from their upstream repositories, run them on the EnvoDat sequences to produce estimated trajectories, then evaluate those trajectories with `scripts/evaluate_slam.py`. Most of these are ROS packages; see each project's instructions for ROS 1/2 setup.
 
 ## 6. Download the dataset
 
 Use the helper script below to download the data to `./data`:
 
 ```bash
-python docs/scripts/download_envodat.py --scene mu-hall --format yolo --out ./data
+python scripts/download_envodat.py --scene mu-hall --format yolo --out ./data
 ```
 
-Or download manually from the [EnvoDat download page](https://sites.google.com/view/envodat/download) and place the files under `./data`.
+Or download manually from the [EnvoDat Download](https://sites.google.com/view/envodat/download) and place the files under `./data`.
 
 ## 7. Verify the installation
 
