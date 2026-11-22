@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-results_file = '.../results.csv'  # Path to the training results CSV file
+results_file = '.../results.csv'
 
 def load_training_results(file_path):
     df = pd.read_csv(file_path)
