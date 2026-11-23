@@ -133,6 +133,25 @@ def place(src, dst, copy):
         dst.symlink_to(Path(src).resolve())
 
 
+def normalise_label(text):
+    """Return label text with box rows turned into 4-corner polygons if the file mixes
+    boxes and polygons, else None. Ultralytics drops any image whose label file mixes
+    the two ("labels mix segment and detection rows"); the polygon form keeps every object
+    and still trains detectors (boxes are taken from the polygons)."""
+    rows = [line.split() for line in text.splitlines() if line.strip()]
+    kinds = {len(r) == 5 for r in rows if len(r) >= 5}
+    if kinds != {True, False}:
+        return None
+    out = []
+    for r in rows:
+        if len(r) == 5:
+            c, (cx, cy, w, h) = r[0], map(float, r[1:])
+            x0, y0, x1, y1 = cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2
+            r = [c] + [f"{v:.6f}" for v in (x0, y0, x1, y0, x1, y1, x0, y1)]
+        out.append(" ".join(r))
+    return "\n".join(out) + "\n"
+
+
 def stage_scene(scene, env, scene_dir, out, copy):
     names = read_names(scene_dir)
     dst_root = out / "yolo" / scene
@@ -145,13 +164,21 @@ def stage_scene(scene, env, scene_dir, out, copy):
         dst_img, dst_lbl = dst_root / dst_split / "images", dst_root / dst_split / "labels"
         dst_img.mkdir(parents=True, exist_ok=True)
         dst_lbl.mkdir(parents=True, exist_ok=True)
-        n = 0
+        n = fixed = 0
         with open(dst_img / "metadata.jsonl", "w") as meta:
             for img in sorted(p for p in img_dir.iterdir() if p.suffix.lower() in IMG_EXT):
                 lbl = lbl_dir / (img.stem + ".txt")
                 place(img, dst_img / img.name, copy)
                 if lbl.exists():
-                    place(lbl, dst_lbl / lbl.name, copy)
+                    norm = normalise_label(lbl.read_text())
+                    if norm is None:
+                        place(lbl, dst_lbl / lbl.name, copy)
+                    else:
+                        target = dst_lbl / lbl.name
+                        if target.exists() or target.is_symlink():
+                            target.unlink()
+                        target.write_text(norm)
+                        fixed += 1
                 with Image.open(img) as im:
                     w, h = im.size
                 bboxes, cats = yolo_to_coco_boxes(lbl, w, h)
@@ -164,6 +191,9 @@ def stage_scene(scene, env, scene_dir, out, copy):
                 n += 1
         counts[hf_split] = n
         cfg[yaml_key] = f"{dst_split}/images"
+        if fixed:
+            print(f"  {scene}/{dst_split}: {fixed} label file(s) mixed boxes and polygons; "
+                  "boxes written as polygons so no image is skipped")
     data_yaml = {**{k: v for k, v in cfg.items() if v}, "nc": len(names), "names": names}
     (dst_root / "data.yaml").write_text(yaml.safe_dump(data_yaml, sort_keys=False))
     return {"scene": scene, "env": env, "classes": len(names), "names": names, "counts": counts}

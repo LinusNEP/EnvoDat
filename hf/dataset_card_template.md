@@ -36,7 +36,7 @@ data/<scene>/{train,validation,test}-*.parquet   # images + boxes, for 🤗 data
 yolo/<scene>.zip                                 # Ultralytics layout: train/valid/test images + labels, data.yaml
 ```
 
-Each scene is packed into a few large files, so downloading it takes one or a few requests. In the Parquet files, `objects.bbox` holds COCO-style pixel boxes `[x_min, y_min, width, height]`, `objects.category` the class ids (a `ClassLabel` with the scene's class names) and `objects.category_name` the names directly. The zip unpacks to the standard Ultralytics layout with a `data.yaml` whose paths are relative to it.
+Each scene is packed into a few large files, so downloading it takes one or a few requests. In the Parquet files, `objects.bbox` holds COCO-style pixel boxes `[x_min, y_min, width, height]`, `objects.category` the class ids (a `ClassLabel` with the scene's class names) and `objects.category_name` the names directly. The zip unpacks to the standard Ultralytics layout with a `data.yaml` whose paths are relative to it. Where an original label file mixed plain boxes and polygons, the boxes are written as 4-corner polygons, since Ultralytics would otherwise skip that image; no object is lost.
 
 ## Usage
 

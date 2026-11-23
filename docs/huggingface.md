@@ -11,7 +11,7 @@ data/<scene>/{train,validation,test}-*.parquet   # images + boxes, for 🤗 data
 yolo/<scene>.zip                                 # Ultralytics layout: images, labels, data.yaml
 ```
 
-On the one hand, `load_dataset` reads the Parquet files and returns images with COCO-style boxes (`[x_min, y_min, width, height]` in pixels), class ids (`category`, with the class names attached) and class names (`category_name`). On the other hand, the zip unpacks to the standard Ultralytics layout. Packing matters because the Hub rate-limits requests per file, so a scene stored as thousands of single images would lock users out. Each scene is a separate config because the class vocabularies differ between environments, and the dataset card lists every scene with its split sizes. The annotations follow the 70 / 20 / 10 train / validation / test split of the release.
+On the one hand, `load_dataset` reads the Parquet files and returns images with COCO-style boxes (`[x_min, y_min, width, height]` in pixels), class ids (`category`, with the class names attached) and class names (`category_name`). On the other hand, the zip unpacks to the standard Ultralytics layout. Where an original label file mixed plain boxes and polygons, the boxes are written as 4-corner polygons, because Ultralytics skips any image whose labels mix the two; no object is lost. Packing matters because the Hub rate-limits requests per file, so a scene stored as thousands of single images would lock users out. Each scene is a separate config because the class vocabularies differ between environments, and the dataset card lists every scene with its split sizes. The annotations follow the 70 / 20 / 10 train / validation / test split of the release.
 
 ## Download
 
