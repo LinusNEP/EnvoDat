@@ -14,7 +14,7 @@
 
 **`401` or `403` errors.** If the dataset is gated, accept its terms on the [dataset page](https://huggingface.co/datasets/Linpen/EnvoDat) and log in once with `hf auth login`.
 
-**`429 Too Many Requests`.** Anonymous downloads are rate-limited. Logging in with `hf auth login` raises the limit; downloads resume where they stopped.
+**`429 Too Many Requests`.** The Hub limits how many requests an account makes in five minutes. Each scene is only a few files, so this should be rare; if it happens, wait five minutes and run the same command again (finished files are cached). Logging in with `hf auth login` raises the limit.
 
 **Disk space and cache.** Scenes are written to the data root (`ed.init(...)`, `--root` or `ENVODAT_ROOT`). The Hugging Face cache lives in `~/.cache/huggingface` and can be moved with the `HF_HOME` environment variable.
 

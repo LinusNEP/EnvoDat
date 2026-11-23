@@ -32,6 +32,13 @@ def _normalise(scenes):
     return out
 
 
+def _not_found():
+    """Exception types for 'file not in repo', across huggingface_hub versions."""
+    from huggingface_hub import errors
+    return tuple(getattr(errors, n) for n in ("EntryNotFoundError", "RemoteEntryNotFoundError")
+                 if hasattr(errors, n))
+
+
 def list_scenes(format="yolo", revision=None, repo_id=None):
     """List the scenes published on the Hugging Face Hub.
 
@@ -46,8 +53,8 @@ def list_scenes(format="yolo", revision=None, repo_id=None):
     files = _hub().list_repo_files(repo_id or _config.HF_REPO_ID, repo_type="dataset",
                                    revision=revision)
     prefix = format.rstrip("/") + "/"
-    return sorted({f[len(prefix):].split("/", 1)[0]
-                   for f in files if f.startswith(prefix) and f.count("/") >= 2})
+    return sorted(f[len(prefix):-4] for f in files
+                  if f.startswith(prefix) and f.endswith(".zip") and f.count("/") == 1)
 
 
 def scene_dir(scene, format="yolo"):
@@ -92,12 +99,13 @@ def _load_config(config):
     return cfg
 
 
-def download(scene=None, format="yolo", revision=None, config=None, repo_id=None):
+def download(scene=None, format="yolo", revision=None, config=None, repo_id=None, force=False):
     """Download annotated scenes from the Hugging Face Hub into the data root.
 
-    Only the requested scenes are fetched. Downloads are cached and resumable, and
-    every YOLO ``data.yaml`` is rewritten with an absolute path so it can be passed
-    straight to Ultralytics.
+    Each scene is one zip on the Hub (``yolo/<scene>.zip``), so a download is a single
+    request. It is cached and unpacked into ``<root>/yolo/<scene>/``, and its YOLO
+    ``data.yaml`` is rewritten with an absolute path so it can be passed straight to
+    Ultralytics. Scenes that are already unpacked are skipped unless ``force``.
 
     Args:
         scene: A scene id (``"mu-hall"``), a list of ids, or ``"all"``. Names such as
@@ -107,12 +115,13 @@ def download(scene=None, format="yolo", revision=None, config=None, repo_id=None
         config: Path to a YAML file with any of the keys ``root``, ``scenes``,
             ``format`` and ``revision``. Keyword arguments are ignored when given.
         repo_id: Override the dataset repo (default ``Linpen/EnvoDat``).
+        force: Unpack again even if the scene folder already exists.
 
     Returns:
         Dict mapping each downloaded scene id to its local folder.
     """
     if config is not None:
-        return download(**_load_config(config), repo_id=repo_id)
+        return download(**_load_config(config), repo_id=repo_id, force=force)
     scenes = _normalise(_as_list(scene))
     if not scenes:
         raise ValueError("Pass scene='mu-hall', a list of scenes, or scene='all'.")
@@ -123,17 +132,29 @@ def download(scene=None, format="yolo", revision=None, config=None, repo_id=None
     root.mkdir(parents=True, exist_ok=True)
     print(f"Downloading {', '.join(scenes)} ({format}) from huggingface.co/datasets/{repo_id} "
           f"to {root}", file=sys.stderr)
-    _hub().snapshot_download(
-        repo_id=repo_id, repo_type="dataset", revision=revision, local_dir=str(root),
-        allow_patterns=[f"{format}/{s}/**" for s in scenes] + ["README.md"],
-    )
+    import shutil
+    import zipfile
+    hub = _hub()
     result = {}
     for s in scenes:
         sdir = root / format / s
-        if not sdir.is_dir():
+        if sdir.is_dir() and not force:
+            result[s] = sdir
+            continue
+        try:
+            zpath = hub.hf_hub_download(repo_id, f"{format}/{s}.zip", repo_type="dataset",
+                                        revision=revision)
+        except _not_found():
             print(f"WARNING: scene '{s}' is not on the Hub in format '{format}'. "
                   f"See envodat.list_scenes().", file=sys.stderr)
             continue
+        if sdir.exists():
+            shutil.rmtree(sdir)
+        tmp = sdir.with_name(sdir.name + ".part")
+        shutil.rmtree(tmp, ignore_errors=True)
+        with zipfile.ZipFile(zpath) as z:
+            z.extractall(tmp)
+        tmp.rename(sdir)
         if format == "yolo":
             _localise_yaml(sdir)
         result[s] = sdir

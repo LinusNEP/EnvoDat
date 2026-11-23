@@ -15,13 +15,16 @@ layout of the release:
     │   └── envodata-mu-hall.yaml    └── SubTunnels/ ...
     └── ...
 
-It then stages a Hub-ready tree that serves two kinds of users at once:
+It then stages a Hub-ready tree with a few large files per scene (the Hub limits
+free accounts to 1000 requests per 5 minutes, so one file per image would lock
+users out):
 
-    yolo/<scene>/data.yaml                      -> Ultralytics (YOLOv8-YOLO11) directly
-    yolo/<scene>/<split>/labels/*.txt
-    yolo/<scene>/<split>/images/*.jpg
-    yolo/<scene>/<split>/images/metadata.jsonl  -> 🤗 datasets: load_dataset(repo, "<scene>")
+    yolo/<scene>.zip                            -> Ultralytics layout + data.yaml (envodat.download)
+    data/<scene>/<split>-0000N-of-0000M.parquet -> 🤗 datasets / data viewer: load_dataset(repo, "<scene>")
     README.md                                   -> dataset card with one config per scene
+
+The unpacked YOLO folders stay in the staging folder (yolo/<scene>/) for checking,
+but are not uploaded.
 
 Usage:
     hf auth login                               # once, with a write token
@@ -163,7 +166,69 @@ def stage_scene(scene, env, scene_dir, out, copy):
         cfg[yaml_key] = f"{dst_split}/images"
     data_yaml = {**{k: v for k, v in cfg.items() if v}, "nc": len(names), "names": names}
     (dst_root / "data.yaml").write_text(yaml.safe_dump(data_yaml, sort_keys=False))
-    return {"scene": scene, "env": env, "classes": len(names), "counts": counts}
+    return {"scene": scene, "env": env, "classes": len(names), "names": names, "counts": counts}
+
+
+PARQUET_SHARD_BYTES = 400 * 1024 ** 2   # ~400 MB of images per Parquet file
+HF_SPLITS = (("train", "train"), ("validation", "valid"), ("test", "test"))
+
+
+def pack_scene(info, out):
+    """Write yolo/<scene>.zip and data/<scene>/<split>-*.parquet from a staged scene."""
+    import zipfile
+    try:
+        from datasets import ClassLabel, Dataset, Features, Image as HFImage, Sequence, Value
+    except ImportError:
+        sys.exit("Missing dependency. Install with:  pip install datasets")
+    scene, names = info["scene"], info["names"]
+    sdir = out / "yolo" / scene
+
+    zpath = out / "yolo" / f"{scene}.zip"
+    with zipfile.ZipFile(zpath, "w", zipfile.ZIP_STORED) as z:   # jpg/png are already compressed
+        for f in sorted(sdir.rglob("*")):
+            if f.is_file() or f.is_symlink():
+                z.write(f, f.relative_to(sdir).as_posix())
+
+    features = Features({
+        "image": HFImage(),
+        "file_name": Value("string"),
+        "scene": Value("string"),
+        "width": Value("int32"),
+        "height": Value("int32"),
+        "objects": Sequence({
+            "bbox": Sequence(Value("float32"), length=4),
+            "category": ClassLabel(names=[str(n) for n in names]),
+            "category_name": Value("string"),
+        }),
+    })
+    ddir = out / "data" / scene
+    if ddir.exists():
+        shutil.rmtree(ddir)
+    ddir.mkdir(parents=True)
+    for hf_split, folder in HF_SPLITS:
+        meta = sdir / folder / "images" / "metadata.jsonl"
+        if not meta.exists():
+            continue
+        rows = [json.loads(line) for line in meta.read_text().splitlines() if line.strip()]
+        img_dir = meta.parent
+
+        def gen(rows=rows, img_dir=img_dir):
+            for r in rows:
+                o = r["objects"]
+                yield {"image": {"bytes": (img_dir / r["file_name"]).read_bytes(),
+                                 "path": r["file_name"]},
+                       "file_name": r["file_name"], "scene": r["scene"],
+                       "width": r["width"], "height": r["height"],
+                       "objects": {"bbox": o["bbox"], "category": o["category"],
+                                   "category_name": o["category_name"]}}
+
+        ds = Dataset.from_generator(gen, features=features)
+        size = sum((img_dir / r["file_name"]).stat().st_size for r in rows)
+        n = max(1, -(-size // PARQUET_SHARD_BYTES))
+        for i in range(n):
+            ds.shard(n, i, contiguous=True).to_parquet(
+                str(ddir / f"{hf_split}-{i:05d}-of-{n:05d}.parquet"))
+    return zpath
 
 
 def render_card(scenes, repo_id):
@@ -174,7 +239,7 @@ def render_card(scenes, repo_id):
         configs += [f"- config_name: {s['scene']}", "  data_files:"]
         for hf_split, dst in (("train", "train"), ("validation", "valid"), ("test", "test")):
             if hf_split in s["counts"]:
-                configs += [f"  - split: {hf_split}", f"    path: yolo/{s['scene']}/{dst}/images/*"]
+                configs += [f"  - split: {hf_split}", f"    path: data/{s['scene']}/{hf_split}-*.parquet"]
         c = s["counts"]
         rows.append(f"| `{s['scene']}` | {s['env'] or '–'} | {c.get('train', 0)} | "
                     f"{c.get('validation', 0)} | {c.get('test', 0)} | {s['classes']} |")
@@ -205,17 +270,21 @@ def publish(src, out="./hf_staging", repo_id=HF_REPO_ID, extra=(), copy=False, p
     scenes = []
     for scene, env, scene_dir in find_scenes(src):
         info = stage_scene(scene, env, scene_dir, out, copy)
+        pack_scene(info, out)
         print(f"  staged {scene:<20} {info['counts']}  classes={info['classes']}")
         scenes.append(info)
     if not scenes:
         sys.exit(f"No scenes with train/images found under {src}")
 
+    import zipfile
     for spec in extra:
         fmt, _, path = spec.partition("=")
-        for f in Path(path).rglob("*"):
-            if f.is_file():
-                place(f, out / fmt / f.relative_to(path), copy)
-        print(f"  staged extra format '{fmt}' from {path}")
+        (out / "extra").mkdir(exist_ok=True)
+        with zipfile.ZipFile(out / "extra" / f"{fmt}.zip", "w", zipfile.ZIP_DEFLATED) as z:
+            for f in sorted(Path(path).rglob("*")):
+                if f.is_file():
+                    z.write(f, f.relative_to(path).as_posix())
+        print(f"  packed extra format '{fmt}' from {path} into extra/{fmt}.zip")
 
     (out / "README.md").write_text(render_card(scenes, repo_id))
     print(f"\nStaged {len(scenes)} scene(s) in {out.resolve()}")
@@ -229,10 +298,13 @@ def publish(src, out="./hf_staging", repo_id=HF_REPO_ID, extra=(), copy=False, p
         sys.exit("Missing dependency. Install with:  pip install 'huggingface_hub>=0.25'")
     api = HfApi()
     ensure_repo(api, repo_id, public)
-    # Resumable upload for large datasets: upload_large_folder on huggingface_hub < 2.0,
-    # upload_folder (batched and resumable via hf_xet) on 2.x.
-    upload = getattr(api, "upload_large_folder", None) or api.upload_folder
-    upload(repo_id=repo_id, repo_type="dataset", folder_path=str(out))
+    # Upload only the packed files; delete any loose per-image files from an earlier layout.
+    api.upload_folder(
+        repo_id=repo_id, repo_type="dataset", folder_path=str(out),
+        allow_patterns=["README.md", "yolo/*.zip", "data/*/*.parquet", "extra/*.zip"],
+        delete_patterns=["yolo/*/*"],
+        commit_message="Upload packed EnvoDat scenes (zip + Parquet)",
+    )
     print(f"\nDone: https://huggingface.co/datasets/{repo_id}")
     return scenes
 

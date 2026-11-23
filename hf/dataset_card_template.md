@@ -32,12 +32,11 @@ __SCENES_TABLE__
 ## Layout
 
 ```
-yolo/<scene>/data.yaml                     # Ultralytics config (paths relative to this file)
-yolo/<scene>/{train,valid,test}/images/    # images + metadata.jsonl (for 🤗 datasets)
-yolo/<scene>/{train,valid,test}/labels/    # YOLO txt labels
+data/<scene>/{train,validation,test}-*.parquet   # images + boxes, for 🤗 datasets and the viewer
+yolo/<scene>.zip                                 # Ultralytics layout: train/valid/test images + labels, data.yaml
 ```
 
-Bounding boxes in `metadata.jsonl` are COCO-style pixel coordinates `[x_min, y_min, width, height]`; `category` indexes into the `names` list of the scene's `data.yaml`, and `category_name` gives the class name directly.
+Each scene is packed into a few large files, so downloading it takes one or a few requests. In the Parquet files, `objects.bbox` holds COCO-style pixel boxes `[x_min, y_min, width, height]`, `objects.category` the class ids (a `ClassLabel` with the scene's class names) and `objects.category_name` the names directly. The zip unpacks to the standard Ultralytics layout with a `data.yaml` whose paths are relative to it.
 
 ## Usage
 
@@ -63,9 +62,9 @@ sample["image"], sample["objects"]["bbox"], sample["objects"]["category_name"]
 
 ```bash
 pip install huggingface_hub ultralytics
-hf download __REPO_ID__ --repo-type dataset \
-    --include "yolo/__FIRST_SCENE__/*" --local-dir ./envodat
-yolo train model=yolo11n.pt data=./envodat/yolo/__FIRST_SCENE__/data.yaml epochs=100 imgsz=640
+hf download __REPO_ID__ yolo/__FIRST_SCENE__.zip --repo-type dataset --local-dir ./envodat
+unzip -q ./envodat/yolo/__FIRST_SCENE__.zip -d ./envodat/__FIRST_SCENE__
+yolo train model=yolo11n.pt data=./envodat/__FIRST_SCENE__/data.yaml epochs=100 imgsz=640
 ```
 
 Full documentation, including PyTorch dataloaders, training with 🤗 Transformers and SLAM evaluation, is at [linusnep.github.io/EnvoDat](https://linusnep.github.io/EnvoDat/).

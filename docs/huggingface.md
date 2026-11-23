@@ -4,19 +4,18 @@ The annotated, training-ready EnvoDat scenes are mirrored on the Hugging Face Hu
 
 ## What is on the Hub
 
-Each scene (e.g. `mu-hall`) is stored as follows:
+Each scene (e.g. `mu-hall`) is packed into a few large files, one set per workflow:
 
 ```
-yolo/<scene>/data.yaml                     # Ultralytics config
-yolo/<scene>/{train,valid,test}/images/    # images + metadata.jsonl
-yolo/<scene>/{train,valid,test}/labels/    # YOLO txt labels
+data/<scene>/{train,validation,test}-*.parquet   # images + boxes, for 🤗 datasets and the data viewer
+yolo/<scene>.zip                                 # Ultralytics layout: images, labels, data.yaml
 ```
 
-The same files therefore serve two workflows. On the one hand, Ultralytics reads `data.yaml` and the `labels/` folders directly. On the other hand, the `metadata.jsonl` next to the images lets `load_dataset` return images with COCO-style boxes (`[x_min, y_min, width, height]` in pixels), class ids (`category`) and class names (`category_name`). Each scene is a separate config because the class vocabularies differ between environments, and the dataset card lists every scene with its split sizes. The annotations follow the 70 / 20 / 10 train / validation / test split of the release.
+On the one hand, `load_dataset` reads the Parquet files and returns images with COCO-style boxes (`[x_min, y_min, width, height]` in pixels), class ids (`category`, with the class names attached) and class names (`category_name`). On the other hand, the zip unpacks to the standard Ultralytics layout. Packing matters because the Hub rate-limits requests per file, so a scene stored as thousands of single images would lock users out. Each scene is a separate config because the class vocabularies differ between environments, and the dataset card lists every scene with its split sizes. The annotations follow the 70 / 20 / 10 train / validation / test split of the release.
 
 ## Download
 
-With the toolkit, downloading is a single call, and it also rewrites each `data.yaml` with absolute paths so training works from any directory:
+With the toolkit, downloading is a single call: it fetches the scene's zip, unpacks it, and rewrites its `data.yaml` with absolute paths so training works from any directory:
 
 ```python
 import envodat as ed
@@ -26,14 +25,16 @@ ed.download("mu-hall")
 Without the toolkit, use the Hugging Face CLI or Python API directly:
 
 ```bash
-hf download Linpen/EnvoDat --repo-type dataset --include "yolo/mu-hall/*" --local-dir ./data
+hf download Linpen/EnvoDat yolo/mu-hall.zip --repo-type dataset --local-dir ./data
+unzip -q ./data/yolo/mu-hall.zip -d ./data/mu-hall
 ```
 
 ```python
-from huggingface_hub import snapshot_download
+import zipfile
+from huggingface_hub import hf_hub_download
 
-snapshot_download("Linpen/EnvoDat", repo_type="dataset",
-                  allow_patterns="yolo/mu-hall/*", local_dir="./data")
+path = hf_hub_download("Linpen/EnvoDat", "yolo/mu-hall.zip", repo_type="dataset")
+zipfile.ZipFile(path).extractall("./data/mu-hall")
 ```
 
 ## Load with 🤗 datasets
