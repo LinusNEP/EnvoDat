@@ -32,6 +32,8 @@ The **scene id** is the name used by the toolkit and on the Hugging Face Hub (`e
 | `subt-sbe-01` | SubT-SBe-01 | 01 |
 | `subt-sbe-02` | SubT-SBe-02 | 01 |
 
+The tunnel annotations are released as one set for all SubT-ZAB tunnels, so on the Hub they form a single config, `subt-zab` (`ed.download("subt-zab")`).
+
 The tunnels include poorly lit and feature-sparse sections, highly symmetric passages and narrow, sandy, feature-free stretches.
 
 ## Scene characteristics

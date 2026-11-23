@@ -36,7 +36,8 @@ SCENES = {
     "subt-zab-02": dict(name="SubT-ZAB-02", title="Underground tunnel", environment=SUBTERRANEAN,
                         sequences=["01"], description="Underground tunnel."),
     "subt-zab-03": dict(name="SubT-ZAB-03", title="Underground tunnel", environment=SUBTERRANEAN,
-                        sequences=["01", "02"], description="Underground tunnel."),
+                        sequences=["01", "02"], description="Underground tunnel.",
+                        aliases=["subt-zab-lid-03"]),
     "subt-zab-04": dict(name="SubT-ZAB-04", title="Underground tunnel", environment=SUBTERRANEAN,
                         sequences=["01", "02"], description="Underground tunnel."),
     "subt-zab-05": dict(name="SubT-ZAB-05", title="Underground tunnel", environment=SUBTERRANEAN,
@@ -45,6 +46,10 @@ SCENES = {
                         sequences=["01"], description="Underground tunnel."),
     "subt-sbe-02": dict(name="SubT-SBe-02", title="Underground tunnel", environment=SUBTERRANEAN,
                         sequences=["01"], description="Underground tunnel."),
+    # Annotation set only: the SubT-ZAB tunnels are annotated together, not per scene.
+    "subt-zab": dict(name="SubT-ZAB", title="Underground tunnels (annotations)",
+                     environment=SUBTERRANEAN, sequences=[],
+                     description="Annotated frames of the SubT-ZAB tunnels, released as one set."),
 }
 
 
@@ -61,7 +66,8 @@ def match_scene(text):
     """
     import re
     norm = "-" + re.sub(r"[^a-z0-9]+", "-", str(text).lower()).strip("-") + "-"
-    for sid in sorted(SCENES, key=len, reverse=True):
-        if f"-{sid}-" in norm:
+    names = [(a, sid) for sid, v in SCENES.items() for a in [sid] + v.get("aliases", [])]
+    for name, sid in sorted(names, key=lambda x: len(x[0]), reverse=True):
+        if f"-{name}-" in norm:
             return sid
     return None

@@ -9,7 +9,7 @@ from . import _config, catalog, cps, hub, slam, train
 def _scenes(args):
     print(f"{'id':<13} {'name':<12} {'environment':<13} sequences  description")
     for sid, s in catalog.SCENES.items():
-        print(f"{sid:<13} {s['name']:<12} {s['environment']:<13} {','.join(s['sequences']):<10} "
+        print(f"{sid:<13} {s['name']:<12} {s['environment']:<13} {','.join(s['sequences']) or '-':<10} "
               f"{s['description']}")
 
 
