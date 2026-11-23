@@ -1,0 +1,206 @@
+#!/usr/bin/env python
+"""
+[Maintainers] Move EnvoDat from the CPS server share to the Hugging Face Hub.
+
+Uploads go to a PRIVATE repo unless you pass --public, so you can check everything
+on the Hub before anyone else can see it. Run this on a machine that can reach both cloud.cps.unileoben.ac.at and
+huggingface.co (ideally a CPS server, so the download is local), after
+`hf auth login` with a write token.
+
+Step 1 - see what is on the share (writes cps_tree.tsv and prints a summary):
+
+    python scripts/cps_to_hf.py tree
+
+Step 2 - publish the annotated scenes. Files matching --include are downloaded,
+archives (.zip/.tar/.tar.gz) are extracted, every YOLO export (a folder with
+train/images) is mapped to its scene, and hf_upload.py stages and uploads it:
+
+    python scripts/cps_to_hf.py annotated --include "*yolo*" --stage-only   # inspect first
+    python scripts/cps_to_hf.py annotated --include "*yolo*"                # upload
+
+Step 3 (later, once Hugging Face has confirmed the storage) - raw data, one
+file at a time, so local disk use stays at a single file. Re-running skips
+files that are already on the Hub:
+
+    python scripts/cps_to_hf.py raw --include "*.bag" --dry-run
+    python scripts/cps_to_hf.py raw --include "*.bag" "*gt-poses*"
+"""
+
+import argparse
+import os
+import shutil
+import sys
+import tarfile
+import zipfile
+from collections import defaultdict
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent))
+sys.path.insert(0, str(HERE))
+from envodat import _config  # noqa: E402
+from envodat.catalog import match_scene  # noqa: E402
+from envodat.cps import CPSShare, _matches  # noqa: E402
+
+GB = 1e9
+HF_FILE_LIMIT_GB = 50    # hard per-file limit on the Hub
+HF_REPO_HINT_GB = 300    # above this, Hugging Face asks you to get in touch first
+
+
+def _share(args):
+    return CPSShare(args.share, args.password)
+
+
+def cmd_tree(args):
+    files = list(_share(args).walk(args.path))
+    by_top, by_ext = defaultdict(lambda: [0, 0]), defaultdict(lambda: [0, 0])
+    with open(args.out, "w") as f:
+        f.write("size_bytes\tscene\tpath\n")
+        for r in files:
+            f.write(f"{r.size}\t{match_scene(r.path) or ''}\t{r.path}\n")
+            top = r.path.split("/", 1)[0] if "/" in r.path else "(root)"
+            ext = Path(r.path).suffix.lower() or "(none)"
+            for d, k in ((by_top, top), (by_ext, ext)):
+                d[k][0] += 1
+                d[k][1] += r.size
+    total = sum(r.size for r in files)
+    print(f"{len(files)} files, {total / GB:.1f} GB  ->  full listing in {args.out}\n")
+    for title, d in (("By top-level folder", by_top), ("By extension", by_ext)):
+        print(title)
+        for k, (n, s) in sorted(d.items(), key=lambda kv: -kv[1][1]):
+            print(f"  {k:<40} {n:>8} files {s / GB:>10.2f} GB")
+        print()
+    big = [r for r in files if r.size > HF_FILE_LIMIT_GB * GB]
+    if big:
+        print(f"{len(big)} file(s) exceed the Hub's {HF_FILE_LIMIT_GB} GB per-file limit "
+              f"(split them before a raw upload):")
+        for r in big:
+            print(f"  {r.size / GB:8.1f} GB  {r.path}")
+
+
+def _extract(path):
+    """Extract an archive next to itself (into a folder named after it). Returns True if done."""
+    name = path.name.lower()
+    target = path.parent / path.name.split(".")[0]
+    if name.endswith(".zip"):
+        with zipfile.ZipFile(path) as z:
+            z.extractall(target)
+    elif name.endswith((".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tar.xz")):
+        with tarfile.open(path) as t:
+            if hasattr(tarfile, "data_filter"):
+                t.extractall(target, filter="data")
+            else:
+                t.extractall(target)
+    else:
+        return False
+    return True
+
+
+def cmd_annotated(args):
+    import hf_upload
+
+    share = _share(args)
+    files = [f for f in share.walk(args.path) if _matches(f.path, args.include, args.exclude)]
+    total = sum(f.size for f in files)
+    print(f"{len(files)} file(s) match, {total / GB:.2f} GB")
+    if not files:
+        sys.exit("Nothing matched. Run `tree` and adjust --include.")
+    work = Path(args.work)
+    for f in files:
+        local = share.download_file(f, work / f.path)
+        if _extract(local):
+            print(f"  extracted {f.path}")
+            if not args.keep_archives:
+                local.unlink()
+    hf_upload.publish(work, args.stage_dir, args.repo_id, copy=False, public=args.public,
+                      stage_only=args.stage_only)
+    if not args.stage_only and not args.keep:  # staging symlinks into work/, so clean both
+        shutil.rmtree(work, ignore_errors=True)
+        shutil.rmtree(args.stage_dir, ignore_errors=True)
+
+
+def cmd_raw(args):
+    from huggingface_hub import HfApi
+
+    share = _share(args)
+    files = [f for f in share.walk(args.path) if _matches(f.path, args.include, args.exclude)]
+    too_big = [f for f in files if f.size > HF_FILE_LIMIT_GB * GB]
+    files = [f for f in files if f.size <= HF_FILE_LIMIT_GB * GB]
+    total = sum(f.size for f in files)
+    print(f"{len(files)} file(s) to transfer, {total / GB:.1f} GB")
+    for f in too_big:
+        print(f"  SKIP (> {HF_FILE_LIMIT_GB} GB per-file limit): {f.path} ({f.size / GB:.1f} GB)")
+    if args.dry_run or not files:
+        for f in files:
+            print(f"  {f.size / GB:8.2f} GB  {f.path}")
+        return
+    if total > HF_REPO_HINT_GB * GB and not args.yes:
+        sys.exit(f"This is {total / GB:.0f} GB. Hugging Face asks for repos above ~{HF_REPO_HINT_GB} GB "
+                 "to be agreed with them first (datasets@huggingface.co). Rerun with --yes once "
+                 "they have confirmed the storage.")
+
+    api = HfApi()
+    import hf_upload
+    hf_upload.ensure_repo(api, args.repo_id, args.public)
+    on_hub = {}
+    for item in api.list_repo_tree(args.repo_id, repo_type="dataset", path_in_repo=args.prefix,
+                                   recursive=True):
+        if getattr(item, "size", None) is not None:
+            on_hub[item.path] = item.size
+    work = Path(args.work)
+    for i, f in enumerate(files, 1):
+        dest = f"{args.prefix}/{f.path}"
+        if on_hub.get(dest) == f.size:
+            print(f"[{i}/{len(files)}] already on Hub: {dest}")
+            continue
+        print(f"[{i}/{len(files)}] {f.path} ({f.size / GB:.2f} GB)")
+        local = share.download_file(f, work / f.path)
+        api.upload_file(path_or_fileobj=str(local), path_in_repo=dest, repo_id=args.repo_id,
+                        repo_type="dataset", commit_message=f"Add {dest}")
+        local.unlink()
+    print(f"\nDone: https://huggingface.co/datasets/{args.repo_id}/tree/main/{args.prefix}")
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--share", default=_config.CPS_SHARE_URL, help="Nextcloud public share URL")
+    ap.add_argument("--password", default=os.environ.get("ENVODAT_CPS_PASSWORD", ""),
+                    help="Share password, if any (or $ENVODAT_CPS_PASSWORD)")
+    ap.add_argument("--path", default="", help="Only consider this folder of the share")
+    ap.add_argument("--repo-id", default=_config.HF_REPO_ID)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+
+    p = sub.add_parser("tree", help="List the share and summarise sizes")
+    p.add_argument("--out", default="cps_tree.tsv")
+    p.set_defaults(fn=cmd_tree)
+
+    p = sub.add_parser("annotated", help="Download annotation exports and publish them")
+    p.add_argument("--include", nargs="+", default=["*yolo*"],
+                   help="Glob(s) selecting the YOLO exports (default: '*yolo*')")
+    p.add_argument("--exclude", nargs="*")
+    p.add_argument("--work", default="./cps_work", help="Download/extract folder")
+    p.add_argument("--stage-dir", default="./hf_staging")
+    p.add_argument("--stage-only", action="store_true", help="Stage locally, do not upload")
+    p.add_argument("--keep", action="store_true", help="Keep the download folder afterwards")
+    p.add_argument("--keep-archives", action="store_true", help="Keep archives after extraction")
+    p.add_argument("--public", action="store_true",
+                   help="Upload to a PUBLIC repo (default: private, only you can see it)")
+    p.set_defaults(fn=cmd_annotated)
+
+    p = sub.add_parser("raw", help="Transfer raw files one by one (resumable)")
+    p.add_argument("--include", nargs="+", required=True, help="Glob(s), e.g. '*.bag'")
+    p.add_argument("--exclude", nargs="*")
+    p.add_argument("--prefix", default="raw", help="Folder on the Hub (default raw/)")
+    p.add_argument("--work", default="./cps_work")
+    p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--yes", action="store_true", help="Confirm a transfer above ~300 GB")
+    p.add_argument("--public", action="store_true",
+                   help="Upload to a PUBLIC repo (default: private, only you can see it)")
+    p.set_defaults(fn=cmd_raw)
+
+    args = ap.parse_args()
+    args.fn(args)
+
+
+if __name__ == "__main__":
+    main()

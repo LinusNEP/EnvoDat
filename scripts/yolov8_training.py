@@ -1,5 +1,15 @@
 #!/usr/bin/env python
+"""
+Train a YOLO detector on an EnvoDat scene.
+
+Either point --data at a local data YAML, or pass --scene to fetch the scene
+from the Hugging Face Hub first (cached under --data-dir):
+
+    python scripts/yolov8_training.py --scene mu-hall --model yolo11n.pt --epochs 100
+    python scripts/yolov8_training.py --data ./data/yolo/mu-hall/data.yaml
+"""
 import argparse
+import os
 import sys
 
 try:
@@ -9,7 +19,10 @@ except ImportError:
 
 def main():
     ap = argparse.ArgumentParser(description="Train a YOLO detector on EnvoDat.")
-    ap.add_argument("--data", required=True, help="Path to the dataset YAML (envodata-*.yaml)")
+    src = ap.add_mutually_exclusive_group(required=True)
+    src.add_argument("--data", help="Path to the dataset YAML (data.yaml / envodata-*.yaml)")
+    src.add_argument("--scene", help="EnvoDat scene id to fetch from Hugging Face, e.g. mu-hall")
+    ap.add_argument("--data-dir", default="./data", help="Where --scene downloads go")
     ap.add_argument("--model", default="yolo11n.pt", help="Pretrained weights or model name")
     ap.add_argument("--epochs", type=int, default=100)
     ap.add_argument("--imgsz", type=int, default=640)
@@ -26,6 +39,14 @@ def main():
     ap.add_argument("--export", default=None,
                     help="Export format after training, e.g. onnx, torchscript, engine")
     args = ap.parse_args()
+
+    if args.scene:
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+        import envodat as ed
+        ed.init(args.data_dir)
+        if not ed.download(args.scene):
+            sys.exit(f"Could not fetch scene '{args.scene}'.")
+        args.data = str(ed.data_yaml(args.scene))
 
     model = YOLO(args.model)
     train_kwargs = dict(

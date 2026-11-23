@@ -1,0 +1,5 @@
+.wy-side-nav-search { background-color: #1f72b8; }
+.wy-nav-content { max-width: 960px; }
+.video-wrap { position: relative; padding-bottom: 56.25%; height: 0; margin: 1em 0 1.5em; }
+.video-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+.rst-content table.docutils td, .rst-content table.docutils th { white-space: normal; }

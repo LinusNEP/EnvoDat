@@ -10,16 +10,16 @@ Open an issue with: what you ran (command/config), what you expected, what happe
 
 ## Development setup
 
-See [`docs/INSTALL.md`](docs/INSTALL.md). In short:
+See [`docs/installation.md`](docs/installation.md). In short:
 
 ```bash
 python3 -m venv EnvoDatEnv && source EnvoDatEnv/bin/activate
-pip install -r requirements.txt
+pip install -e ".[all]"
 ```
 
 ## Submitting benchmark results (leaderboard)
 
-The leaderboard in [`docs/BENCHMARK.md`](docs/BENCHMARK.md) is generated from the data files in [`results/`](results/). To add a result:
+The leaderboard in [`docs/benchmark.md`](docs/benchmark.md) is generated from the data files in [`results/`](results/). To add a result:
 
 1. **Reproduce it** with the provided tools so it's verifiable:
    - *SLAM track:* produce a TUM-format estimated trajectory with the SLAM pipeline, then evaluate it:
@@ -36,7 +36,7 @@ The leaderboard in [`docs/BENCHMARK.md`](docs/BENCHMARK.md) is generated from th
    ```
 3. **Open a pull request** that includes:
    - the diff to the relevant `results/*.yaml`,
-   - the regenerated `docs/BENCHMARK.md`,
+   - the regenerated `docs/benchmark.md`,
    - the exact command/config used,
    - a link to logs, a short report, or a config file, so the result can be checked.
 

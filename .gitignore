@@ -15,6 +15,7 @@ env/
 # Datasets & weights
 data/
 dataset/
+hf_staging/
 *.pt
 *.onnx
 *.engine
@@ -37,3 +38,11 @@ wandb/
 Thumbs.db
 .idea/
 .vscode/
+
+# Docs build
+docs/_build/
+
+# Hub transfer work folders
+cps_work/
+cps_tree.tsv
+envodat_data/

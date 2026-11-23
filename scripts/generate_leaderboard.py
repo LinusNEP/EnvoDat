@@ -156,13 +156,13 @@ Public leaderboard for the EnvoDat dataset. Last generated: {date}.
 
 FOOTER = """## How to submit
 
-1. Reproduce your result using the EnvoDat sequences and the tools in [`scripts/`](scripts/) (`evaluate_slam.py` for the SLAM track,
+1. Reproduce your result using the EnvoDat sequences and the tools in [`scripts/`](https://github.com/LinusNEP/EnvoDat/tree/main/scripts) (`evaluate_slam.py` for the SLAM track,
    `yolov8_training.py` + `model.val()` for the detection track).
-2. Add an entry to the relevant file under [`results/`](../results/).
+2. Add an entry to the relevant file under [`results/`](https://github.com/LinusNEP/EnvoDat/tree/main/results).
 3. Run `python scripts/generate_leaderboard.py` to regenerate the leaderboard.
-4. Open a pull request with the YAML diff, the regenerated `BENCHMARK.md`, your exact command/config, and a link to logs or a short report.
+4. Open a pull request with the YAML diff, the regenerated `docs/benchmark.md`, your exact command/config, and a link to logs or a short report.
 
-See [`CONTRIBUTING.md`](../CONTRIBUTING.md) for the full checklist.
+See [`CONTRIBUTING.md`](https://github.com/LinusNEP/EnvoDat/blob/main/CONTRIBUTING.md) for the full checklist.
 
 """
 
@@ -171,7 +171,7 @@ def main():
     ap = argparse.ArgumentParser(description="Regenerate the EnvoDat leaderboard markdown.")
     ap.add_argument("--slam", default="results/slam_results.yaml")
     ap.add_argument("--detection", default="results/detection_results.yaml")
-    ap.add_argument("--out", default="docs/BENCHMARK.md")
+    ap.add_argument("--out", default="docs/benchmark.md")
     args = ap.parse_args()
 
     parts = [HEADER.format(date=dt.date.today().isoformat())]
