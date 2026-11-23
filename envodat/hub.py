@@ -8,6 +8,7 @@ from . import _config
 from .catalog import SCENES, match_scene
 
 SPLIT_DIRS = {"train": "train", "validation": "valid", "test": "test"}
+COMPLETE_MARKER = ".envodat-complete"   # written only after a scene has been fully unpacked
 
 
 def _hub():
@@ -105,7 +106,8 @@ def download(scene=None, format="yolo", revision=None, config=None, repo_id=None
     Each scene is one zip on the Hub (``yolo/<scene>.zip``), so a download is a single
     request. It is cached and unpacked into ``<root>/yolo/<scene>/``, and its YOLO
     ``data.yaml`` is rewritten with an absolute path so it can be passed straight to
-    Ultralytics. Scenes that are already unpacked are skipped unless ``force``.
+    Ultralytics. Scenes that are already completely unpacked are skipped unless ``force``;
+    a folder left by an interrupted download is replaced.
 
     Args:
         scene: A scene id (``"mu-hall"``), a list of ids, or ``"all"``. Names such as
@@ -138,7 +140,7 @@ def download(scene=None, format="yolo", revision=None, config=None, repo_id=None
     result = {}
     for s in scenes:
         sdir = root / format / s
-        if sdir.is_dir() and not force:
+        if (sdir / COMPLETE_MARKER).exists() and not force:
             result[s] = sdir
             continue
         try:
@@ -157,6 +159,7 @@ def download(scene=None, format="yolo", revision=None, config=None, repo_id=None
         tmp.rename(sdir)
         if format == "yolo":
             _localise_yaml(sdir)
+        (sdir / COMPLETE_MARKER).write_text(f"{repo_id} {format}/{s}.zip {revision or 'main'}\n")
         result[s] = sdir
     return result
 
