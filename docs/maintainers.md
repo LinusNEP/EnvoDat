@@ -34,9 +34,12 @@ This lists every file on the share and writes `cps_tree.tsv` (size, matched scen
 ### 2. Publish the annotated scenes
 
 ```bash
-python scripts/cps_to_hf.py annotated --include "*yolo*" --stage-only   # check ./hf_staging
-python scripts/cps_to_hf.py annotated --include "*yolo*"                # upload
+python scripts/cps_to_hf.py annotated --include "*-yolov8.zip" --dry-run      # files that will be used
+python scripts/cps_to_hf.py annotated --include "*-yolov8.zip" --stage-only   # check ./hf_staging
+python scripts/cps_to_hf.py annotated --include "*-yolov8.zip"                # upload
 ```
+
+One YOLO flavour is enough, since the YOLOv7–v12 exports share the same label format. When a scene exists under several folder spellings (`MU-COR`, `MU-Cor`, `mu-cor`), only one copy is used, preferring the spelling of the scene's official name. Copies that differ in size are listed so you can check them; `--no-dedupe` turns this off.
 
 The command downloads the files that match `--include` and extracts any `.zip` or `.tar(.gz)` archives. It then finds every YOLO export (a folder with `train/images`) and maps it to its scene from the path. For example, `Indoors/MU-Hall/annotations/MU-Hall_YOLOv8.zip` becomes the `mu-hall` config. Finally, it hands everything to `scripts/hf_upload.py`, which writes `metadata.jsonl` for 🤗 `datasets` and generates the dataset card from `hf/dataset_card_template.md`. The upload is resumable: if it is interrupted, run the same command again. The repository is created **private**, so only you (and members of your organisation, if it is an organisation repo) can see it. Check the dataset page, the viewer and `envodat download` while logged in. When everything looks right, open the dataset's **Settings** on Hugging Face and change its visibility to public, optionally with gated access (see below). Private storage on a free account is limited (about 100 GB), so if the annotated scenes are larger, check a subset first, for example with `--include "*mu-hall*yolo*"`. The scripts refuse to upload into an existing *public* repo unless you pass `--public`.
 

@@ -15,8 +15,9 @@ Step 2 - publish the annotated scenes. Files matching --include are downloaded,
 archives (.zip/.tar/.tar.gz) are extracted, every YOLO export (a folder with
 train/images) is mapped to its scene, and hf_upload.py stages and uploads it:
 
-    python scripts/cps_to_hf.py annotated --include "*yolo*" --stage-only   # inspect first
-    python scripts/cps_to_hf.py annotated --include "*yolo*"                # upload
+    python scripts/cps_to_hf.py annotated --include "*-yolov8.zip" --dry-run      # what is used
+    python scripts/cps_to_hf.py annotated --include "*-yolov8.zip" --stage-only   # inspect
+    python scripts/cps_to_hf.py annotated --include "*-yolov8.zip"                # upload
 
 Step 3 (later, once Hugging Face has confirmed the storage) - raw data, one
 file at a time, so local disk use stays at a single file. Re-running skips
@@ -39,7 +40,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
 sys.path.insert(0, str(HERE))
 from envodat import _config  # noqa: E402
-from envodat.catalog import match_scene  # noqa: E402
+from envodat.catalog import SCENES, match_scene  # noqa: E402
 from envodat.cps import CPSShare, _matches  # noqa: E402
 
 GB = 1e9
@@ -49,6 +50,64 @@ HF_REPO_HINT_GB = 300    # above this, Hugging Face asks you to get in touch fir
 
 def _share(args):
     return CPSShare(args.share, args.password)
+
+
+def _dup_key(path):
+    """(scene, path below the scene folder, lower-cased), or None if no scene is named.
+
+    ``Indoors/MU-COR/annotations-MU-COR/mu-cor-yolov8.zip`` and
+    ``Indoors/mu-cor/annotations-mu-cor/mu-cor-yolov8.zip`` share one key.
+    """
+    parts = path.split("/")
+    for i, part in enumerate(parts[:-1]):
+        sid = match_scene(part)
+        if sid:
+            return sid, "/".join(parts[i + 1:]).lower()
+    return None
+
+
+def _preferred(path, sid):
+    """Rank copies: the folder spelled like the catalog name ("MU-Cor") wins, then a stable order."""
+    official = SCENES.get(sid, {}).get("name", "")
+    return (0 if official in path.split("/") else 1, path)
+
+
+def dedupe(files, quiet=False):
+    """Keep one copy of each file that exists under several spellings of a scene folder.
+
+    Returns (kept, skipped). Copies whose sizes differ are kept apart from the chosen one
+    only in the report: they are listed so they can be checked by hand.
+    """
+    groups, kept, skipped = {}, [], []
+    for f in files:
+        key = _dup_key(f.path)
+        if key is None:
+            kept.append(f)
+        else:
+            groups.setdefault(key, []).append(f)
+    for (sid, _), copies in groups.items():
+        copies.sort(key=lambda f: _preferred(f.path, sid))
+        kept.append(copies[0])
+        skipped += copies[1:]
+        if not quiet and len({c.size for c in copies}) > 1:
+            print(f"  NOTE: copies of {copies[0].path} differ in size; keeping it, check these:")
+            for c in copies[1:]:
+                print(f"        {c.size / GB:8.3f} GB  {c.path}")
+    kept.sort(key=lambda f: f.path)
+    return kept, skipped
+
+
+def _select(args):
+    share = _share(args)
+    files = [f for f in share.walk(args.path) if _matches(f.path, args.include, args.exclude)]
+    skipped = []
+    if not args.no_dedupe:
+        files, skipped = dedupe(files)
+        if skipped:
+            print(f"Skipping {len(skipped)} duplicate copies "
+                  f"({sum(f.size for f in skipped) / GB:.2f} GB) under other spellings of a scene "
+                  "folder (--no-dedupe to keep them).")
+    return share, files
 
 
 def cmd_tree(args):
@@ -70,6 +129,10 @@ def cmd_tree(args):
         for k, (n, s) in sorted(d.items(), key=lambda kv: -kv[1][1]):
             print(f"  {k:<40} {n:>8} files {s / GB:>10.2f} GB")
         print()
+    _, dups = dedupe(files, quiet=True)
+    if dups:
+        print(f"{len(dups)} files ({sum(r.size for r in dups) / GB:.1f} GB) are duplicate copies under "
+              "other spellings of a scene folder (e.g. MU-COR / MU-Cor / mu-cor). Uploads keep one copy.\n")
     big = [r for r in files if r.size > HF_FILE_LIMIT_GB * GB]
     if big:
         print(f"{len(big)} file(s) exceed the Hub's {HF_FILE_LIMIT_GB} GB per-file limit "
@@ -99,12 +162,15 @@ def _extract(path):
 def cmd_annotated(args):
     import hf_upload
 
-    share = _share(args)
-    files = [f for f in share.walk(args.path) if _matches(f.path, args.include, args.exclude)]
+    share, files = _select(args)
     total = sum(f.size for f in files)
-    print(f"{len(files)} file(s) match, {total / GB:.2f} GB")
+    print(f"{len(files)} file(s) selected, {total / GB:.2f} GB")
     if not files:
         sys.exit("Nothing matched. Run `tree` and adjust --include.")
+    if args.dry_run:
+        for f in files:
+            print(f"  {f.size / GB:8.3f} GB  {match_scene(f.path) or '(no scene)':<12} {f.path}")
+        return
     work = Path(args.work)
     for f in files:
         local = share.download_file(f, work / f.path)
@@ -122,8 +188,7 @@ def cmd_annotated(args):
 def cmd_raw(args):
     from huggingface_hub import HfApi
 
-    share = _share(args)
-    files = [f for f in share.walk(args.path) if _matches(f.path, args.include, args.exclude)]
+    share, files = _select(args)
     too_big = [f for f in files if f.size > HF_FILE_LIMIT_GB * GB]
     files = [f for f in files if f.size <= HF_FILE_LIMIT_GB * GB]
     total = sum(f.size for f in files)
@@ -183,6 +248,9 @@ def main():
     p.add_argument("--stage-only", action="store_true", help="Stage locally, do not upload")
     p.add_argument("--keep", action="store_true", help="Keep the download folder afterwards")
     p.add_argument("--keep-archives", action="store_true", help="Keep archives after extraction")
+    p.add_argument("--dry-run", action="store_true", help="Only list the files that would be used")
+    p.add_argument("--no-dedupe", action="store_true",
+                   help="Keep duplicate copies under other spellings of a scene folder")
     p.add_argument("--public", action="store_true",
                    help="Upload to a PUBLIC repo (default: private, only you can see it)")
     p.set_defaults(fn=cmd_annotated)
@@ -193,6 +261,8 @@ def main():
     p.add_argument("--prefix", default="raw", help="Folder on the Hub (default raw/)")
     p.add_argument("--work", default="./cps_work")
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--no-dedupe", action="store_true",
+                   help="Keep duplicate copies under other spellings of a scene folder")
     p.add_argument("--yes", action="store_true", help="Confirm a transfer above ~300 GB")
     p.add_argument("--public", action="store_true",
                    help="Upload to a PUBLIC repo (default: private, only you can see it)")
