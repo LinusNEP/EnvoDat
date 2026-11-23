@@ -9,7 +9,9 @@ import base64
 import fnmatch
 import os
 import shutil
+import socket
 import sys
+import time
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -23,6 +25,8 @@ _PROPFIND = (b'<?xml version="1.0"?><d:propfind xmlns:d="DAV:"><d:prop>'
              b"<d:resourcetype/><d:getcontentlength/><d:getlastmodified/>"
              b"</d:prop></d:propfind>")
 _NS = {"d": "DAV:"}
+TIMEOUT = 120   # seconds per request
+RETRIES = 4     # extra attempts after a timeout or 5xx/429 answer
 
 
 @dataclass
@@ -64,8 +68,21 @@ class CPSShare:
         if auth:
             h["Authorization"] = "Basic " + base64.b64encode(auth.encode()).decode()
         h.update(headers or {})
-        return urllib.request.urlopen(
-            urllib.request.Request(url, data=data, headers=h, method=method), timeout=120)
+        req = urllib.request.Request(url, data=data, headers=h, method=method)
+        # Retry timeouts, dropped connections and server-side errors (busy server);
+        # 4xx answers such as 401/404 are final and raised at once.
+        for attempt in range(RETRIES + 1):
+            try:
+                return urllib.request.urlopen(req, timeout=TIMEOUT)
+            except urllib.error.HTTPError as exc:
+                if exc.code < 500 and exc.code != 429 or attempt == RETRIES:
+                    raise
+            except (urllib.error.URLError, socket.timeout, ConnectionError) as exc:
+                if attempt == RETRIES:
+                    raise urllib.error.URLError(getattr(exc, "reason", exc)) from exc
+            wait = 10 * (attempt + 1)
+            print(f"  server busy or unreachable, retrying in {wait} s ...", file=sys.stderr)
+            time.sleep(wait)
 
     def _propfind(self, rel):
         bases = [self._base] if self._base else self._candidates()

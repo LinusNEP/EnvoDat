@@ -97,9 +97,25 @@ def dedupe(files, quiet=False):
     return kept, skipped
 
 
+def _listing(args, share):
+    """All files on the share: from a saved `tree` listing if --tree is given, else listed live."""
+    if args.tree:
+        from envodat.cps import RemoteFile
+        files = []
+        with open(args.tree) as f:
+            next(f, None)  # header
+            for line in f:
+                size, _, path = line.rstrip("\n").split("\t", 2)
+                if path.startswith(args.path.strip("/")):
+                    files.append(RemoteFile(path, int(size)))
+        print(f"Using the saved listing {args.tree} ({len(files)} files)")
+        return files
+    return list(share.walk(args.path))
+
+
 def _select(args):
     share = _share(args)
-    files = [f for f in share.walk(args.path) if _matches(f.path, args.include, args.exclude)]
+    files = [f for f in _listing(args, share) if _matches(f.path, args.include, args.exclude)]
     skipped = []
     if not args.no_dedupe:
         files, skipped = dedupe(files)
@@ -232,6 +248,9 @@ def main():
     ap.add_argument("--password", default=os.environ.get("ENVODAT_CPS_PASSWORD", ""),
                     help="Share password, if any (or $ENVODAT_CPS_PASSWORD)")
     ap.add_argument("--path", default="", help="Only consider this folder of the share")
+    ap.add_argument("--tree", metavar="TSV",
+                    help="Use the file list saved by `tree` (cps_tree.tsv) instead of listing "
+                         "the share again; much faster and gentler on the server")
     ap.add_argument("--repo-id", default=_config.HF_REPO_ID)
     sub = ap.add_subparsers(dest="cmd", required=True)
 

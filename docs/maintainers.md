@@ -34,10 +34,12 @@ This lists every file on the share and writes `cps_tree.tsv` (size, matched scen
 ### 2. Publish the annotated scenes
 
 ```bash
-python scripts/cps_to_hf.py annotated --include "*-yolov8.zip" --dry-run      # files that will be used
-python scripts/cps_to_hf.py annotated --include "*-yolov8.zip" --stage-only   # check ./hf_staging
-python scripts/cps_to_hf.py annotated --include "*-yolov8.zip"                # upload
+python scripts/cps_to_hf.py --tree cps_tree.tsv annotated --include "*-yolov8.zip" --dry-run      # files that will be used
+python scripts/cps_to_hf.py --tree cps_tree.tsv annotated --include "*-yolov8.zip" --stage-only   # check ./hf_staging
+python scripts/cps_to_hf.py --tree cps_tree.tsv annotated --include "*-yolov8.zip"                # upload
 ```
+
+`--tree cps_tree.tsv` reuses the listing from step 1 instead of listing the whole share again, which takes thousands of requests and can time out on a busy server. Rerun `tree` when files on the share change. Timeouts and server errors on single requests are retried automatically.
 
 One YOLO flavour is enough, since the YOLOv7–v12 exports share the same label format. When a scene exists under several folder spellings (`MU-COR`, `MU-Cor`, `mu-cor`), only one copy is used, preferring the spelling of the scene's official name. Copies that differ in size are listed so you can check them; `--no-dedupe` turns this off.
 
