@@ -8,10 +8,10 @@
 [![PyPI](https://img.shields.io/pypi/v/envodat.svg)](https://pypi.org/project/envodat/)
 [![Paper (ICRA 2025)](https://img.shields.io/badge/Paper-ICRA%202025-b31b1b.svg)](https://ieeexplore.ieee.org/document/11127594)
 [![arXiv](https://img.shields.io/badge/arXiv-2410.22200-b31b1b.svg)](https://arxiv.org/abs/2410.22200)
-[![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-ffcc4d.svg)](https://huggingface.co/datasets/LinusNEP/EnvoDat)
+[![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-ffcc4d.svg)](https://huggingface.co/datasets/Linpen/EnvoDat)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
-📖 [Documentation](https://linusnep.github.io/EnvoDat/) | 🌐 [Project Website](https://sites.google.com/view/envodat/overview) | ⚙️ [Install](docs/installation.md) | 🧪 [Examples](docs/examples.md) | 🏆 [Leaderboard](docs/benchmark.md) | 🤗 [Hugging Face](https://huggingface.co/datasets/LinusNEP/EnvoDat) | 📥 [Download](https://sites.google.com/view/envodat/download) | ⚖️ [License](https://creativecommons.org/licenses/by/4.0/)
+📖 [Documentation](https://linusnep.github.io/EnvoDat/) | 🌐 [Project Website](https://sites.google.com/view/envodat/overview) | ⚙️ [Install](docs/installation.md) | 🧪 [Examples](docs/examples.md) | 🏆 [Leaderboard](docs/benchmark.md) | 🤗 [Hugging Face](https://huggingface.co/datasets/Linpen/EnvoDat) | 📥 [Download](https://sites.google.com/view/envodat/download) | ⚖️ [License](https://creativecommons.org/licenses/by/4.0/)
 
 <img src="docs/scene_characteristics.gif" alt="Scene characteristics">
 
@@ -42,7 +42,7 @@ EnvoDat is available from two places, depending on what you need:
 
 | Source | Contents | Best for |
 |--------|----------|----------|
-| 🤗 [Hugging Face Hub](https://huggingface.co/datasets/LinusNEP/EnvoDat) | Annotated scenes, training-ready (YOLO layout + 🤗 `datasets` configs) | Training and evaluating ML models |
+| 🤗 [Hugging Face Hub](https://huggingface.co/datasets/Linpen/EnvoDat) | Annotated scenes, training-ready (YOLO layout + 🤗 `datasets` configs) | Training and evaluating ML models |
 | 📥 [EnvoDat Download](https://sites.google.com/view/envodat/download) | Full release: raw ROS bags (RGB, LiDAR, depth, IMU), ground-truth poses, and all annotation formats (YOLO, COCO, OpenAI-CLIP, VOC, …) | SLAM/odometry, multisensor research, other formats |
 
 To fetch scenes from the Hub, either use the helper script or load them directly with 🤗 `datasets`:
@@ -55,7 +55,7 @@ envodat download mu-hall           # one scene, YOLO-ready
 
 ```python
 from datasets import load_dataset
-ds = load_dataset("LinusNEP/EnvoDat", "mu-hall")   # train / validation / test splits
+ds = load_dataset("Linpen/EnvoDat", "mu-hall")   # train / validation / test splits
 ```
 
 See [`docs/huggingface.md`](docs/huggingface.md) for the Hub layout and version pinning, and [`docs/examples.md`](docs/examples.md#download-raw-data) for downloading raw data from the CPS server.

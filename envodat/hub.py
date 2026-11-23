@@ -38,7 +38,7 @@ def list_scenes(format="yolo", revision=None, repo_id=None):
     Args:
         format: Annotation format folder on the Hub (default ``"yolo"``).
         revision: Branch, tag or commit to query.
-        repo_id: Override the dataset repo (default ``LinusNEP/EnvoDat``).
+        repo_id: Override the dataset repo (default ``Linpen/EnvoDat``).
 
     Returns:
         Sorted list of scene ids, e.g. ``["leo-for", "mu-hall", ...]``.
@@ -106,7 +106,7 @@ def download(scene=None, format="yolo", revision=None, config=None, repo_id=None
         revision: Branch, tag or commit to pin (recommended for papers).
         config: Path to a YAML file with any of the keys ``root``, ``scenes``,
             ``format`` and ``revision``. Keyword arguments are ignored when given.
-        repo_id: Override the dataset repo (default ``LinusNEP/EnvoDat``).
+        repo_id: Override the dataset repo (default ``Linpen/EnvoDat``).
 
     Returns:
         Dict mapping each downloaded scene id to its local folder.

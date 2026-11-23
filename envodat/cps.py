@@ -59,7 +59,8 @@ class CPSShare:
         ]
 
     def _request(self, url, auth, method="GET", headers=None, data=None):
-        h = {"User-Agent": "envodat"}
+        # Nextcloud rejects public-share WebDAV requests without this header (401).
+        h = {"User-Agent": "envodat", "X-Requested-With": "XMLHttpRequest"}
         if auth:
             h["Authorization"] = "Basic " + base64.b64encode(auth.encode()).decode()
         h.update(headers or {})
@@ -82,7 +83,12 @@ class CPSShare:
                 last = exc  # try the next endpoint flavour
             except urllib.error.URLError as exc:
                 raise ConnectionError(f"Cannot reach {self.host}: {exc.reason}") from exc
-        raise ConnectionError(f"WebDAV listing of '{rel or '/'}' failed: {last}")
+        hint = ""
+        if getattr(last, "code", None) == 401:
+            hint = (" The share may be password-protected: pass --password (or set "
+                    "ENVODAT_CPS_PASSWORD)." if not self.password else
+                    " Check the share password.")
+        raise ConnectionError(f"WebDAV listing of '{rel or '/'}' failed: {last}.{hint}")
 
     # -- public API -------------------------------------------------------
     def listdir(self, path=""):

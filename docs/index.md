@@ -30,7 +30,7 @@ ed.train_yolo("mu-hall", model="yolo11n.pt", epochs=100)
 # Useful Links
 
 - Paper (ICRA 2025): [IEEE Xplore](https://ieeexplore.ieee.org/document/11127594) · [arXiv:2410.22200](https://arxiv.org/abs/2410.22200)
-- Dataset on Hugging Face: [LinusNEP/EnvoDat](https://huggingface.co/datasets/LinusNEP/EnvoDat)
+- Dataset on Hugging Face: [Linpen/EnvoDat](https://huggingface.co/datasets/Linpen/EnvoDat)
 - Code, toolkit and leaderboard: [github.com/LinusNEP/EnvoDat](https://github.com/LinusNEP/EnvoDat)
 - Full release, including raw ROS bags: [EnvoDat download page](https://sites.google.com/view/envodat/download)
 - Project website (figures, poster, presentation): [sites.google.com/view/envodat](https://sites.google.com/view/envodat/overview)

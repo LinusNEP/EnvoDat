@@ -47,7 +47,7 @@ except ImportError:
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from envodat.catalog import SCENES, match_scene  # noqa: E402
 
-HF_REPO_ID = os.environ.get("ENVODAT_HF_REPO", "LinusNEP/EnvoDat")
+HF_REPO_ID = os.environ.get("ENVODAT_HF_REPO", "Linpen/EnvoDat")
 CARD_TEMPLATE = Path(__file__).resolve().parent.parent / "hf" / "dataset_card_template.md"
 IMG_EXT = {".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff", ".webp"}
 # source split folder -> (staged folder, data.yaml key, 🤗 split name)

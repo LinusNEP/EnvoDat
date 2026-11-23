@@ -1,6 +1,6 @@
 # Hugging Face
 
-The annotated, training-ready EnvoDat scenes are mirrored on the Hugging Face Hub at **[huggingface.co/datasets/LinusNEP/EnvoDat](https://huggingface.co/datasets/LinusNEP/EnvoDat)**. Every scene is published in YOLO layout and as a 🤗 `datasets` config, so you can go from zero to a training run without reorganising folders by hand. The raw multisensor data stays on the CPS server for now and is fetched with {func}`envodat.download_raw`.
+The annotated, training-ready EnvoDat scenes are mirrored on the Hugging Face Hub at **[huggingface.co/datasets/Linpen/EnvoDat](https://huggingface.co/datasets/Linpen/EnvoDat)**. Every scene is published in YOLO layout and as a 🤗 `datasets` config, so you can go from zero to a training run without reorganising folders by hand. The raw multisensor data stays on the CPS server for now and is fetched with {func}`envodat.download_raw`.
 
 ## What is on the Hub
 
@@ -26,13 +26,13 @@ ed.download("mu-hall")
 Without the toolkit, use the Hugging Face CLI or Python API directly:
 
 ```bash
-hf download LinusNEP/EnvoDat --repo-type dataset --include "yolo/mu-hall/*" --local-dir ./data
+hf download Linpen/EnvoDat --repo-type dataset --include "yolo/mu-hall/*" --local-dir ./data
 ```
 
 ```python
 from huggingface_hub import snapshot_download
 
-snapshot_download("LinusNEP/EnvoDat", repo_type="dataset",
+snapshot_download("Linpen/EnvoDat", repo_type="dataset",
                   allow_patterns="yolo/mu-hall/*", local_dir="./data")
 ```
 
@@ -41,7 +41,7 @@ snapshot_download("LinusNEP/EnvoDat", repo_type="dataset",
 ```python
 from datasets import load_dataset
 
-ds = load_dataset("LinusNEP/EnvoDat", "mu-hall")
+ds = load_dataset("Linpen/EnvoDat", "mu-hall")
 sample = ds["train"][0]
 sample["image"]                      # PIL image
 sample["objects"]["bbox"]            # [[x_min, y_min, w, h], ...] in pixels

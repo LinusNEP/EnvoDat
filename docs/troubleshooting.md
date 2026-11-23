@@ -12,13 +12,13 @@
 
 **`scene 'xyz' is not on the Hub`.** Check the scene id with `envodat list`. Ids are lower case with dashes, for example `mu-hall` and `subt-zab-01`; names such as `MU-Hall` are converted automatically.
 
-**`401` or `403` errors.** If the dataset is gated, accept its terms on the [dataset page](https://huggingface.co/datasets/LinusNEP/EnvoDat) and log in once with `hf auth login`.
+**`401` or `403` errors.** If the dataset is gated, accept its terms on the [dataset page](https://huggingface.co/datasets/Linpen/EnvoDat) and log in once with `hf auth login`.
 
 **`429 Too Many Requests`.** Anonymous downloads are rate-limited. Logging in with `hf auth login` raises the limit; downloads resume where they stopped.
 
 **Disk space and cache.** Scenes are written to the data root (`ed.init(...)`, `--root` or `ENVODAT_ROOT`). The Hugging Face cache lives in `~/.cache/huggingface` and can be moved with the `HF_HOME` environment variable.
 
-**`load_dataset` complains about the config name.** Every scene is its own config, so pass one: `load_dataset("LinusNEP/EnvoDat", "mu-hall")`.
+**`load_dataset` complains about the config name.** Every scene is its own config, so pass one: `load_dataset("Linpen/EnvoDat", "mu-hall")`.
 
 ## Downloading raw data
 

@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-HF_REPO_ID = os.environ.get("ENVODAT_HF_REPO", "LinusNEP/EnvoDat")
+HF_REPO_ID = os.environ.get("ENVODAT_HF_REPO", "Linpen/EnvoDat")
 CPS_SHARE_URL = os.environ.get(
     "ENVODAT_CPS_SHARE", "https://cloud.cps.unileoben.ac.at/index.php/s/cs7qF4Qq5bZbt9k")
 

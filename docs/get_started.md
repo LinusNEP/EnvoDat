@@ -29,7 +29,7 @@ pip install pandas matplotlib
 ## Prepare the EnvoData Dataset
 
 ### Option A (recommended): fetch a training-ready scene from Hugging Face
-The annotated scenes are published on the [Hugging Face Hub](https://huggingface.co/datasets/LinusNEP/EnvoDat) already in YOLO's directory structure, together with a ready-made config. Hence, a single command replaces steps 1 and 2 of Option B:
+The annotated scenes are published on the [Hugging Face Hub](https://huggingface.co/datasets/Linpen/EnvoDat) already in YOLO's directory structure, together with a ready-made config. Hence, a single command replaces steps 1 and 2 of Option B:
 ```bash
 pip install envodat
 envodat --root ./data download mu-hall

@@ -38,7 +38,7 @@ envodat = "envodat.cli:main"
 Homepage = "https://linusnep.github.io/EnvoDat/"
 Documentation = "https://linusnep.github.io/EnvoDat/"
 Repository = "https://github.com/LinusNEP/EnvoDat"
-Dataset = "https://huggingface.co/datasets/LinusNEP/EnvoDat"
+Dataset = "https://huggingface.co/datasets/Linpen/EnvoDat"
 Paper = "https://ieeexplore.ieee.org/document/11127594"
 
 [tool.setuptools.packages.find]

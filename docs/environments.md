@@ -2,7 +2,7 @@
 
 EnvoDat covers 13 environments in three groups: indoor scenes on the Montanuniversität Leoben campus, outdoor scenes in Leoben, and subterranean tunnels. They were recorded intermittently between November 2022 and September 2024, under conditions that include dynamic entities, high illumination and shadow formation, fog and rain, partial and zero visibility, and different times of day.
 
-The **scene id** is the name used by the toolkit and on the Hugging Face Hub (`ed.download("mu-hall")`, `load_dataset("LinusNEP/EnvoDat", "mu-hall")`). `envodat scenes` prints the same catalog, and {func}`envodat.info` returns it for one scene.
+The **scene id** is the name used by the toolkit and on the Hugging Face Hub (`ed.download("mu-hall")`, `load_dataset("Linpen/EnvoDat", "mu-hall")`). `envodat scenes` prints the same catalog, and {func}`envodat.info` returns it for one scene.
 
 ## Indoor
 

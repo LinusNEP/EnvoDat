@@ -45,7 +45,7 @@ Before the real upload, check the `--stage-only` output for two things. First, e
 When new scenes or fixes are uploaded, tag the release so that users can pin it:
 
 ```bash
-hf repos tag create LinusNEP/EnvoDat v1.0 --repo-type dataset
+hf repos tag create Linpen/EnvoDat v1.0 --repo-type dataset
 ```
 
 ### 3. Raw data (later)

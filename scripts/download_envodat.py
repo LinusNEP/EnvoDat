@@ -4,7 +4,7 @@ Download EnvoDat (thin wrapper around the `envodat` toolkit; `envodat download` 
 
 Sources:
   hf   (default)  Training-ready annotated scenes from the Hugging Face Hub
-                  (https://huggingface.co/datasets/LinusNEP/EnvoDat), YOLO layout + data.yaml.
+                  (https://huggingface.co/datasets/Linpen/EnvoDat), YOLO layout + data.yaml.
   cps             Raw data (ROS bags, LiDAR, RGB-D, IMU, ground-truth poses) from the
                   CPS server, selected with --include glob patterns.
 
