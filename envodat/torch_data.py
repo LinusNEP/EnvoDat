@@ -1,4 +1,4 @@
-"""PyTorch access to downloaded scenes (YOLO layout), without extra dependencies."""
+"""PyTorch access to downloaded scenes (YOLO layout)"""
 
 
 from .hub import SPLIT_DIRS, class_names, scene_dir
@@ -15,19 +15,6 @@ def _torch():
 
 
 class EnvoDatDetection:
-    """Map-style detection dataset over one split of a downloaded scene.
-
-    Each item is ``(image, target)``: ``image`` is a float tensor ``[3, H, W]`` in
-    ``[0, 1]`` (resized to ``image_size`` if given), and ``target`` is a dict with
-    ``boxes`` (``[N, 4]``, normalised ``cx, cy, w, h``), ``labels`` (``[N]``),
-    ``image_id`` and ``path``. Polygon labels are converted to their bounding boxes.
-
-    Args:
-        scene: Scene id, e.g. ``"mu-hall"``.
-        split: ``"train"``, ``"validation"`` (or ``"val"``) or ``"test"``.
-        image_size: Int (square) or ``(h, w)`` to resize to; ``None`` keeps the original.
-        transform: Optional callable ``(image, target) -> (image, target)``.
-    """
 
     def __init__(self, scene, split="train", image_size=640, transform=None):
         split = {"val": "validation", "valid": "validation"}.get(split, split)
@@ -82,7 +69,6 @@ class EnvoDatDetection:
 
 
 def collate(batch):
-    """Stack images (same size) and keep targets as a list."""
     torch = _torch()
     images, targets = zip(*batch)
     try:
@@ -94,22 +80,6 @@ def collate(batch):
 
 def dataloader(scene, split="train", batch_size=8, image_size=640, shuffle=None,
                num_workers=0, transform=None, **kwargs):
-    """Return a ``torch.utils.data.DataLoader`` over a downloaded scene.
-
-    Args:
-        scene: Scene id, e.g. ``"mu-hall"``.
-        split: ``"train"``, ``"validation"`` or ``"test"``.
-        batch_size: Images per batch.
-        image_size: Resize target (int or ``(h, w)``); ``None`` keeps originals.
-        shuffle: Defaults to ``True`` for the train split, else ``False``.
-        num_workers: Worker processes for loading.
-        transform: Optional ``(image, target) -> (image, target)`` callable.
-        **kwargs: Passed to ``DataLoader``.
-
-    Yields:
-        ``(images, targets)`` where ``images`` is ``[B, 3, H, W]`` and ``targets`` a list of
-        dicts as described in :class:`EnvoDatDetection`.
-    """
     torch = _torch()
     ds = EnvoDatDetection(scene, split, image_size, transform)
     return torch.utils.data.DataLoader(

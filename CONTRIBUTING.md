@@ -47,6 +47,10 @@ The leaderboard in [`docs/benchmark.md`](docs/benchmark.md) is generated from th
 - Mark a failed/lost-tracking run as `null` (renders as DNF).
 - Round metrics to a sensible precision; the generator formats to 3 decimals.
 
+## Maintainers
+
+Publishing data, releasing the `envodat` package and updating the documentation website are described in [MAINTAINING.md](MAINTAINING.md).
+
 ## Code style
 
 - Python 3.8+ compatible.

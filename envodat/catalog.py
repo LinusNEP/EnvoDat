@@ -1,6 +1,4 @@
-"""Static catalog of the EnvoDat scenes (13 environments).
-
-Scene ids are lower-case and match the config names on the Hugging Face Hub.
+"""Catalog of the EnvoDat scenes.
 """
 
 INDOOR, OUTDOOR, SUBTERRANEAN = "indoor", "outdoor", "subterranean"
@@ -54,16 +52,11 @@ SCENES = {
 
 
 def scene_ids(environment=None):
-    """Return the catalog scene ids, optionally filtered by environment type."""
+    """Return the catalog scene ids."""
     return [k for k, v in SCENES.items() if environment in (None, v["environment"])]
 
 
 def match_scene(text):
-    """Return the catalog scene id contained in ``text`` (a path or name), or None.
-
-    Matching ignores case and separators, so "MU-Hall", "mu_hall_yolov8" and
-    "Indoors/MU-Hall/annotations" all resolve to ``"mu-hall"``.
-    """
     import re
     norm = "-" + re.sub(r"[^a-z0-9]+", "-", str(text).lower()).strip("-") + "-"
     names = [(a, sid) for sid, v in SCENES.items() for a in [sid] + v.get("aliases", [])]

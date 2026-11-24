@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Download EnvoDat (thin wrapper around the `envodat` toolkit; `envodat download` is equivalent).
+Download EnvoDat.
 
 Sources:
   hf   (default)  Training-ready annotated scenes from the Hugging Face Hub

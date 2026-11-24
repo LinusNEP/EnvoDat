@@ -1,37 +1,4 @@
 #!/usr/bin/env python
-"""
-[Maintainers] Publish the annotated EnvoDat scenes to the Hugging Face Hub.
-
-The script discovers every scene under --src that has a YOLO export, i.e. a folder
-containing train/images (plus labels, and valid/ and test/ if present) and a YAML
-with the class names. It works with both a flat layout and the hierarchical
-layout of the release:
-
-    src/                             src/
-    ├── mu-hall/                     ├── Indoors/
-    │   ├── train/images, labels     │   └── mu-hall/
-    │   ├── valid/...                │       ├── train/images, labels
-    │   ├── test/...                 │       └── envodata-mu-hall.yaml
-    │   └── envodata-mu-hall.yaml    └── SubTunnels/ ...
-    └── ...
-
-It then stages a Hub-ready tree with a few large files per scene (the Hub limits
-free accounts to 1000 requests per 5 minutes, so one file per image would lock
-users out):
-
-    yolo/<scene>.zip                            -> Ultralytics layout + data.yaml (envodat.download)
-    data/<scene>/<split>-0000N-of-0000M.parquet -> 🤗 datasets / data viewer: load_dataset(repo, "<scene>")
-    README.md                                   -> dataset card with one config per scene
-
-The unpacked YOLO folders stay in the staging folder (yolo/<scene>/) for checking,
-but are not uploaded.
-
-Usage:
-    hf auth login                               # once, with a write token
-    python scripts/hf_upload.py --src /path/to/EnvoDat-yolo --stage-only   # inspect first
-    python scripts/hf_upload.py --src /path/to/EnvoDat-yolo                # stage + upload (private)
-    python scripts/hf_upload.py --src ... --extra coco=/path/to/coco-export # other formats as-is
-"""
 
 import argparse
 import json
@@ -65,12 +32,6 @@ def slug(name):
 
 
 def find_scenes(src):
-    """Yield (scene_id, environment, scene_dir) for every folder containing train/images.
-
-    The scene id comes from the closest path component that names a known EnvoDat
-    scene (e.g. ``Indoors/MU-Hall/annotations/yolov8`` -> ``mu-hall``); otherwise the
-    folder name is used. Duplicates get a numeric suffix and a warning.
-    """
     seen = set()
     for train_imgs in sorted(Path(src).rglob("train/images")):
         scene_dir = train_imgs.parent.parent
@@ -90,7 +51,6 @@ def find_scenes(src):
 
 
 def read_names(scene_dir):
-    """Class names from the scene's YOLO YAML (list or {id: name} dict)."""
     candidates = sorted(scene_dir.glob("*.yaml")) + sorted(scene_dir.glob("*.yml"))
     for y in candidates:
         cfg = yaml.safe_load(y.read_text()) or {}
@@ -103,7 +63,6 @@ def read_names(scene_dir):
 
 
 def yolo_to_coco_boxes(label_file, w, h):
-    """YOLO txt (boxes or polygons, normalised) -> COCO-style pixel [x, y, w, h]."""
     bboxes, cats = [], []
     if not label_file.exists():
         return bboxes, cats
@@ -134,10 +93,6 @@ def place(src, dst, copy):
 
 
 def normalise_label(text):
-    """Return label text with box rows turned into 4-corner polygons if the file mixes
-    boxes and polygons, else None. Ultralytics drops any image whose label file mixes
-    the two ("labels mix segment and detection rows"); the polygon form keeps every object
-    and still trains detectors (boxes are taken from the polygons)."""
     rows = [line.split() for line in text.splitlines() if line.strip()]
     kinds = {len(r) == 5 for r in rows if len(r) >= 5}
     if kinds != {True, False}:
@@ -204,7 +159,6 @@ HF_SPLITS = (("train", "train"), ("validation", "valid"), ("test", "test"))
 
 
 def pack_scene(info, out):
-    """Write yolo/<scene>.zip and data/<scene>/<split>-*.parquet from a staged scene."""
     import zipfile
     try:
         from datasets import ClassLabel, Dataset, Features, Image as HFImage, Sequence, Value
@@ -286,8 +240,8 @@ def ensure_repo(api, repo_id, public=False):
     api.create_repo(repo_id, repo_type="dataset", private=not public, exist_ok=True)
     is_private = api.repo_info(repo_id, repo_type="dataset").private
     if not is_private and not public:
-        sys.exit(f"{repo_id} already exists and is PUBLIC. Nothing was uploaded. Rerun with "
-                 "--public to upload into it anyway, or make it private in its settings first.")
+        sys.exit(f"{repo_id} already exists and is PUBLIC. Rerun with "
+                 "--public to upload into it anyway.")
     print(f"Uploading to {'PUBLIC' if not is_private else 'private'} repo "
           f"https://huggingface.co/datasets/{repo_id}")
 

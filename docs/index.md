@@ -66,7 +66,6 @@ benchmark
 :caption: Help
 
 troubleshooting
-maintainers
 ```
 
 # Citation

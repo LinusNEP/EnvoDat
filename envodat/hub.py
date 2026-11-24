@@ -46,16 +46,6 @@ def _not_found():
 
 
 def list_scenes(format="yolo", revision=None, repo_id=None):
-    """List the scenes published on the Hugging Face Hub.
-
-    Args:
-        format: Annotation format folder on the Hub (default ``"yolo"``).
-        revision: Branch, tag or commit to query.
-        repo_id: Override the dataset repo (default ``Linpen/EnvoDat``).
-
-    Returns:
-        Sorted list of scene ids, e.g. ``["leo-for", "mu-hall", ...]``.
-    """
     hub = _hub()
     repo_id = repo_id or _config.HF_REPO_ID
     try:
@@ -73,11 +63,6 @@ def scene_dir(scene, format="yolo"):
 
 
 def data_yaml(scene):
-    """Path to the ready-to-use Ultralytics ``data.yaml`` of a downloaded scene.
-
-    Raises:
-        FileNotFoundError: if the scene has not been downloaded with :func:`download`.
-    """
     path = scene_dir(scene) / "data.yaml"
     if not path.exists():
         raise FileNotFoundError(f"{path} not found. Run envodat.download('{scene}') first.")
@@ -110,27 +95,6 @@ def _load_config(config):
 
 
 def download(scene=None, format="yolo", revision=None, config=None, repo_id=None, force=False):
-    """Download annotated scenes from the Hugging Face Hub into the data root.
-
-    Each scene is one zip on the Hub (``yolo/<scene>.zip``), so a download is a single
-    request. It is cached and unpacked into ``<root>/yolo/<scene>/``, and its YOLO
-    ``data.yaml`` is rewritten with an absolute path so it can be passed straight to
-    Ultralytics. Scenes that are already completely unpacked are skipped unless ``force``;
-    a folder left by an interrupted download is replaced.
-
-    Args:
-        scene: A scene id (``"mu-hall"``), a list of ids, or ``"all"``. Names such as
-            ``"MU-Hall"`` are accepted too.
-        format: Annotation format folder on the Hub (default ``"yolo"``).
-        revision: Branch, tag or commit to pin (recommended for papers).
-        config: Path to a YAML file with any of the keys ``root``, ``scenes``,
-            ``format`` and ``revision``. Keyword arguments are ignored when given.
-        repo_id: Override the dataset repo (default ``Linpen/EnvoDat``).
-        force: Unpack again even if the scene folder already exists.
-
-    Returns:
-        Dict mapping each downloaded scene id to its local folder.
-    """
     if config is not None:
         return download(**_load_config(config), repo_id=repo_id, force=force)
     scenes = _normalise(_as_list(scene))
@@ -176,21 +140,6 @@ def download(scene=None, format="yolo", revision=None, config=None, repo_id=None
 
 
 def load(scene, split=None, repo_id=None, revision=None, **kwargs):
-    """Load a scene as a 🤗 ``datasets`` object.
-
-    Uses the local copy when the scene has been downloaded, and otherwise streams
-    it from the Hub. Each example has ``image``, ``width``, ``height`` and
-    ``objects`` with COCO-style pixel boxes ``[x_min, y_min, w, h]``, class ids
-    (``category``) and class names (``category_name``).
-
-    Args:
-        scene: Scene id, e.g. ``"mu-hall"``.
-        split: ``"train"``, ``"validation"`` or ``"test"``; ``None`` returns all splits.
-        **kwargs: Passed to :func:`datasets.load_dataset`.
-
-    Returns:
-        A ``DatasetDict``, or a ``Dataset`` when ``split`` is given.
-    """
     try:
         from datasets import load_dataset
     except ImportError as exc:

@@ -1,31 +1,4 @@
 #!/usr/bin/env python
-"""
-[Maintainers] Move EnvoDat from the CPS server share to the Hugging Face Hub.
-
-Uploads go to a PRIVATE repo unless you pass --public, so you can check everything
-on the Hub before anyone else can see it. Run this on a machine that can reach both cloud.cps.unileoben.ac.at and
-huggingface.co (ideally a CPS server, so the download is local), after
-`hf auth login` with a write token.
-
-Step 1 - see what is on the share (writes cps_tree.tsv and prints a summary):
-
-    python scripts/cps_to_hf.py tree
-
-Step 2 - publish the annotated scenes. Files matching --include are downloaded,
-archives (.zip/.tar/.tar.gz) are extracted, every YOLO export (a folder with
-train/images) is mapped to its scene, and hf_upload.py stages and uploads it:
-
-    python scripts/cps_to_hf.py annotated --include "*-yolov8.zip" --dry-run      # what is used
-    python scripts/cps_to_hf.py annotated --include "*-yolov8.zip" --stage-only   # inspect
-    python scripts/cps_to_hf.py annotated --include "*-yolov8.zip"                # upload
-
-Step 3 (later, once Hugging Face has confirmed the storage) - raw data, one
-file at a time, so local disk use stays at a single file. Re-running skips
-files that are already on the Hub:
-
-    python scripts/cps_to_hf.py raw --include "*.bag" --dry-run
-    python scripts/cps_to_hf.py raw --include "*.bag" "*gt-poses*"
-"""
 
 import argparse
 import os
@@ -53,11 +26,6 @@ def _share(args):
 
 
 def _dup_key(path):
-    """(scene, path below the scene folder, lower-cased), or None if no scene is named.
-
-    ``Indoors/MU-COR/annotations-MU-COR/mu-cor-yolov8.zip`` and
-    ``Indoors/mu-cor/annotations-mu-cor/mu-cor-yolov8.zip`` share one key.
-    """
     parts = path.split("/")
     for i, part in enumerate(parts[:-1]):
         sid = match_scene(part)
@@ -67,17 +35,11 @@ def _dup_key(path):
 
 
 def _preferred(path, sid):
-    """Rank copies: the folder spelled like the catalog name ("MU-Cor") wins, then a stable order."""
     official = SCENES.get(sid, {}).get("name", "")
     return (0 if official in path.split("/") else 1, path)
 
 
 def dedupe(files, quiet=False):
-    """Keep one copy of each file that exists under several spellings of a scene folder.
-
-    Returns (kept, skipped). Copies whose sizes differ are kept apart from the chosen one
-    only in the report: they are listed so they can be checked by hand.
-    """
     groups, kept, skipped = {}, [], []
     for f in files:
         key = _dup_key(f.path)
@@ -98,7 +60,6 @@ def dedupe(files, quiet=False):
 
 
 def _listing(args, share):
-    """All files on the share: from a saved `tree` listing if --tree is given, else listed live."""
     if args.tree:
         from envodat.cps import RemoteFile
         files = []
@@ -122,7 +83,7 @@ def _select(args):
         if skipped:
             print(f"Skipping {len(skipped)} duplicate copies "
                   f"({sum(f.size for f in skipped) / GB:.2f} GB) under other spellings of a scene "
-                  "folder (--no-dedupe to keep them).")
+                  "folder.")
     return share, files
 
 
@@ -148,7 +109,7 @@ def cmd_tree(args):
     _, dups = dedupe(files, quiet=True)
     if dups:
         print(f"{len(dups)} files ({sum(r.size for r in dups) / GB:.1f} GB) are duplicate copies under "
-              "other spellings of a scene folder (e.g. MU-COR / MU-Cor / mu-cor). Uploads keep one copy.\n")
+              "other spellings of a scene folder.\n")
     big = [r for r in files if r.size > HF_FILE_LIMIT_GB * GB]
     if big:
         print(f"{len(big)} file(s) exceed the Hub's {HF_FILE_LIMIT_GB} GB per-file limit "
@@ -158,7 +119,6 @@ def cmd_tree(args):
 
 
 def _extract(path):
-    """Extract an archive next to itself (into a folder named after it). Returns True if done."""
     name = path.name.lower()
     target = path.parent / path.name.split(".")[0]
     if name.endswith(".zip"):

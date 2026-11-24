@@ -1,17 +1,4 @@
 """EnvoDat toolkit: download, load, train on and evaluate the EnvoDat dataset.
-
-Typical use::
-
-    import envodat as ed
-
-    ed.init("./envodat_data")            # where data is stored
-    ed.list_scenes()                     # scenes on the Hugging Face Hub
-    ed.download("mu-hall")               # training-ready scene (YOLO + 🤗 datasets)
-    loader = ed.dataloader("mu-hall", split="train", batch_size=8)
-    ed.train_yolo("mu-hall", model="yolo11n.pt", epochs=100)
-
-Heavy dependencies (torch, ultralytics, datasets, evo) are imported only when the
-function that needs them is called.
 """
 
 from ._config import init, root

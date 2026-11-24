@@ -4,7 +4,7 @@
 import envodat as ed
 ```
 
-All functions are available at the top level of the package. Heavy dependencies are imported lazily, so `import envodat` stays fast and only the feature you use needs its extra (see [Installation](installation.md#install-with-pip)).
+All functions are available at the top level of this package. Heavy dependencies are imported lazily, so `import envodat` stays fast and only the feature you use needs its extra (see [Installation](installation.md#install-with-pip)).
 
 ## Initialization
 

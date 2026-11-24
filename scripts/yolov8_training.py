@@ -1,12 +1,6 @@
 #!/usr/bin/env python
 """
 Train a YOLO detector on an EnvoDat scene.
-
-Either point --data at a local data YAML, or pass --scene to fetch the scene
-from the Hugging Face Hub first (cached under --data-dir):
-
-    python scripts/yolov8_training.py --scene mu-hall --model yolo11n.pt --epochs 100
-    python scripts/yolov8_training.py --data ./data/yolo/mu-hall/data.yaml
 """
 import argparse
 import os

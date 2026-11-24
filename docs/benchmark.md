@@ -1,7 +1,7 @@
 # EnvoDat Benchmark Leaderboard
 
 Public leaderboard for the EnvoDat dataset. Baseline numbers are from the
-[ICRA 2025 paper](https://ieeexplore.ieee.org/document/11127594). Last generated: 2025-09-08.
+[ICRA paper](https://ieeexplore.ieee.org/document/11127594). Last generated: 2025-09-08.
 
 
 ## SLAM track

@@ -1,8 +1,4 @@
-"""Raw data from the EnvoDat share on the CPS server (Nextcloud public link).
-
-Uses the share's WebDAV interface, so listing and downloading need nothing beyond
-the standard library. Downloads resume after interruptions and are checked
-against the size reported by the server.
+"""Raw data from the EnvoDat share on the CPS server.
 """
 
 import base64
@@ -31,18 +27,11 @@ RETRIES = 4     # extra attempts after a timeout or 5xx/429 answer
 
 @dataclass
 class RemoteFile:
-    """A file on the CPS share."""
     path: str   # relative to the share root, '/'-separated
     size: int
 
 
 class CPSShare:
-    """Client for a Nextcloud public share.
-
-    Args:
-        share_url: Public link, e.g. ``https://host/index.php/s/<token>``.
-        password: Share password, if the link is protected.
-    """
 
     def __init__(self, share_url=None, password=""):
         url = urlparse(share_url or _config.CPS_SHARE_URL)
@@ -175,31 +164,11 @@ def _matches(path, include, exclude):
 
 
 def cps_list(include=None, exclude=None, path="", share_url=None, password=""):
-    """List files on the CPS share, optionally filtered by glob patterns.
-
-    Patterns match the share-relative path, case-insensitively, e.g.
-    ``"*mu-hall*/*.bag"`` or ``"*yolo*"``.
-
-    Returns:
-        List of :class:`RemoteFile`.
-    """
     share = CPSShare(share_url, password)
     return [f for f in share.walk(path) if _matches(f.path, _as_list(include), _as_list(exclude))]
 
 
 def download_raw(include, exclude=None, out=None, dry_run=False, share_url=None, password=""):
-    """Download raw files (ROS bags, LiDAR, RGB-D, IMU, poses) from the CPS server.
-
-    Args:
-        include: Glob pattern(s) on the share-relative path, e.g.
-            ``"*mu-hall*seq01*.bag"`` or ``["*leo-str*/gt-poses*", "*leo-str*/imu-*"]``.
-        exclude: Glob pattern(s) to skip.
-        out: Target folder (default ``<root>/raw``). The share's folder structure is kept.
-        dry_run: Only list what would be downloaded and the total size.
-
-    Returns:
-        List of local paths (or of :class:`RemoteFile` when ``dry_run``).
-    """
     share = CPSShare(share_url, password)
     files = [f for f in share.walk() if _matches(f.path, _as_list(include), _as_list(exclude))]
     total = sum(f.size for f in files)
