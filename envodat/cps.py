@@ -27,12 +27,19 @@ RETRIES = 4     # extra attempts after a timeout or 5xx/429 answer
 
 @dataclass
 class RemoteFile:
+    """A file on the CPS share: its path relative to the share root and its size in bytes."""
     path: str   # relative to the share root, '/'-separated
     size: int
 
 
 class CPSShare:
 
+    """Client for a public Nextcloud share, accessed over WebDAV.
+
+    Args:
+        share_url: Public share link; defaults to the EnvoDat share.
+        password: Share password, if the link is protected.
+    """
     def __init__(self, share_url=None, password=""):
         url = urlparse(share_url or _config.CPS_SHARE_URL)
         self.host = f"{url.scheme}://{url.netloc}"
@@ -164,11 +171,31 @@ def _matches(path, include, exclude):
 
 
 def cps_list(include=None, exclude=None, path="", share_url=None, password=""):
+    """Lists files on the CPS share that match glob patterns.
+
+    Patterns match the share-relative path and ignore case, e.g. ``"*mu-hall*/*.bag"``.
+
+    Returns:
+        A list of :class:`RemoteFile`.
+    """
     share = CPSShare(share_url, password)
     return [f for f in share.walk(path) if _matches(f.path, _as_list(include), _as_list(exclude))]
 
 
 def download_raw(include, exclude=None, out=None, dry_run=False, share_url=None, password=""):
+    """Downloads raw files (ROS bags, LiDAR, RGB-D, IMU, poses) from the CPS server.
+
+    The share's folder structure is kept, and interrupted downloads resume.
+
+    Args:
+        include: Glob pattern(s) on the share path, e.g. ``"*mu-hall*seq01*.bag"``.
+        exclude: Glob pattern(s) to skip.
+        out: Target folder; defaults to ``<root>/raw``.
+        dry_run: Only lists the matching files and their total size.
+
+    Returns:
+        Local paths, or the matching :class:`RemoteFile` entries for a dry run.
+    """
     share = CPSShare(share_url, password)
     files = [f for f in share.walk() if _matches(f.path, _as_list(include), _as_list(exclude))]
     total = sum(f.size for f in files)

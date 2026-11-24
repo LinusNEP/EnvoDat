@@ -46,6 +46,16 @@ def _not_found():
 
 
 def list_scenes(format="yolo", revision=None, repo_id=None):
+    """Lists the scenes published on the Hugging Face Hub.
+
+    Args:
+        format: Annotation format (default ``"yolo"``).
+        revision: Branch, tag or commit.
+        repo_id: Dataset repository; defaults to ``Linpen/EnvoDat``.
+
+    Returns:
+        Sorted scene ids, e.g. ``["leo-for", "mu-hall", ...]``.
+    """
     hub = _hub()
     repo_id = repo_id or _config.HF_REPO_ID
     try:
@@ -63,6 +73,11 @@ def scene_dir(scene, format="yolo"):
 
 
 def data_yaml(scene):
+    """Returns the path of a downloaded scene's Ultralytics ``data.yaml``.
+
+    Raises:
+        FileNotFoundError: If the scene has not been downloaded.
+    """
     path = scene_dir(scene) / "data.yaml"
     if not path.exists():
         raise FileNotFoundError(f"{path} not found. Run envodat.download('{scene}') first.")
@@ -95,6 +110,23 @@ def _load_config(config):
 
 
 def download(scene=None, format="yolo", revision=None, config=None, repo_id=None, force=False):
+    """Downloads annotated scenes from the Hugging Face Hub into the data root.
+
+    Each scene is a single zip, unpacked into ``<root>/yolo/<scene>/`` with a ``data.yaml``
+    that uses absolute paths. Complete scenes are skipped; incomplete ones are downloaded again.
+
+    Args:
+        scene: Scene id (``"mu-hall"``), list of ids, or ``"all"``.
+        format: Annotation format (default ``"yolo"``).
+        revision: Branch, tag or commit to pin.
+        config: YAML file with ``root``, ``scenes``, ``format`` and ``revision``; replaces
+            the other arguments.
+        repo_id: Dataset repository; defaults to ``Linpen/EnvoDat``.
+        force: Downloads and unpacks again even if the scene is complete.
+
+    Returns:
+        A dict mapping each scene id to its local folder.
+    """
     if config is not None:
         return download(**_load_config(config), repo_id=repo_id, force=force)
     scenes = _normalise(_as_list(scene))
@@ -140,6 +172,20 @@ def download(scene=None, format="yolo", revision=None, config=None, repo_id=None
 
 
 def load(scene, split=None, repo_id=None, revision=None, **kwargs):
+    """Loads a scene as a 🤗 ``datasets`` object.
+
+    The local copy is used when the scene has been downloaded; otherwise the scene is read
+    from the Hub. Each example holds ``image``, ``width``, ``height`` and ``objects``
+    (COCO-style pixel boxes, class ids and class names).
+
+    Args:
+        scene: Scene id, e.g. ``"mu-hall"``.
+        split: ``"train"``, ``"validation"`` or ``"test"``; ``None`` gives all splits.
+        **kwargs: Passed to :func:`datasets.load_dataset`.
+
+    Returns:
+        A ``DatasetDict``, or a ``Dataset`` when ``split`` is given.
+    """
     try:
         from datasets import load_dataset
     except ImportError as exc:

@@ -5,6 +5,21 @@ from .hub import data_yaml, download, scene_dir
 
 def train_yolo(scene, model="yolo11n.pt", epochs=100, imgsz=640, batch=16, download_missing=True,
                evaluate_test=True, **kwargs):
+    """Trains an Ultralytics YOLO detector (YOLOv8 to YOLO11) on a scene.
+
+    The scene is downloaded first if it is not present.
+
+    Args:
+        scene: Scene id, e.g. ``"mu-hall"``.
+        model: Weights or model config, e.g. ``"yolo11n.pt"``.
+        epochs, imgsz, batch: Main training settings.
+        download_missing: Downloads the scene if it is not present.
+        evaluate_test: Also validates on the test split.
+        **kwargs: Further Ultralytics training arguments (``lr0``, ``device``, ...).
+
+    Returns:
+        A dict with the trained ``model`` and the ``val`` (and ``test``) metrics.
+    """
     try:
         from ultralytics import YOLO
     except ImportError as exc:

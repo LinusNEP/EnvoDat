@@ -1,4 +1,17 @@
 #!/usr/bin/env python
+"""Transfers EnvoDat from the CPS server share to the Hugging Face Hub (maintainers).
+
+Commands:
+    tree        lists the share and writes cps_tree.tsv
+    annotated   downloads the YOLO exports, packs them per scene and uploads them
+    raw         transfers raw files one at a time (resumable)
+
+Examples:
+    python scripts/cps_to_hf.py tree
+    python scripts/cps_to_hf.py --tree cps_tree.tsv annotated --include "*-yolov8.zip" --dry-run
+    python scripts/cps_to_hf.py --tree cps_tree.tsv raw --include "*.bag" --dry-run
+"""
+
 
 import argparse
 import os
@@ -18,7 +31,7 @@ from envodat.cps import CPSShare, _matches  # noqa: E402
 
 GB = 1e9
 HF_FILE_LIMIT_GB = 50    # hard per-file limit on the Hub
-HF_REPO_HINT_GB = 300    # above this, Hugging Face asks you to get in touch first
+HF_REPO_HINT_GB = 300    # above this, Hugging Face asks for the storage to be arranged first
 
 
 def _share(args):
@@ -26,6 +39,10 @@ def _share(args):
 
 
 def _dup_key(path):
+    """Returns ``(scene, path below the scene folder, lower-cased)``, or ``None`` if no scene is named.
+
+    Different spellings of a scene folder, such as ``MU-COR`` and ``mu-cor``, give the same key.
+    """
     parts = path.split("/")
     for i, part in enumerate(parts[:-1]):
         sid = match_scene(part)
@@ -35,11 +52,17 @@ def _dup_key(path):
 
 
 def _preferred(path, sid):
+    """Sort key for duplicate copies."""
     official = SCENES.get(sid, {}).get("name", "")
     return (0 if official in path.split("/") else 1, path)
 
 
 def dedupe(files, quiet=False):
+    """Keeps one copy of each file that exists under several spellings of a scene folder.
+
+    Returns:
+        ``(kept, skipped)``. Copies that differ in size are reported for a manual check.
+    """
     groups, kept, skipped = {}, [], []
     for f in files:
         key = _dup_key(f.path)
@@ -60,6 +83,7 @@ def dedupe(files, quiet=False):
 
 
 def _listing(args, share):
+    """Returns all files on the share, from the saved ``tree`` listing when ``--tree`` is given."""
     if args.tree:
         from envodat.cps import RemoteFile
         files = []
@@ -119,6 +143,7 @@ def cmd_tree(args):
 
 
 def _extract(path):
+    """Extracts a zip or tar archive into a folder named after it; returns ``False`` for other files."""
     name = path.name.lower()
     target = path.parent / path.name.split(".")[0]
     if name.endswith(".zip"):
@@ -231,7 +256,7 @@ def main():
     p.add_argument("--no-dedupe", action="store_true",
                    help="Keep duplicate copies under other spellings of a scene folder")
     p.add_argument("--public", action="store_true",
-                   help="Upload to a PUBLIC repo (default: private, only you can see it)")
+                   help="Upload to a PUBLIC repo (default: private, visible only to the repo owner)")
     p.set_defaults(fn=cmd_annotated)
 
     p = sub.add_parser("raw", help="Transfer raw files one by one (resumable)")
@@ -244,7 +269,7 @@ def main():
                    help="Keep duplicate copies under other spellings of a scene folder")
     p.add_argument("--yes", action="store_true", help="Confirm a transfer above ~300 GB")
     p.add_argument("--public", action="store_true",
-                   help="Upload to a PUBLIC repo (default: private, only you can see it)")
+                   help="Upload to a PUBLIC repo (default: private, visible only to the repo owner)")
     p.set_defaults(fn=cmd_raw)
 
     args = ap.parse_args()

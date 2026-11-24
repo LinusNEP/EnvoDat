@@ -57,6 +57,11 @@ def scene_ids(environment=None):
 
 
 def match_scene(text):
+    """Returns the scene id named in a path or name, or ``None``.
+
+    Case and separators are ignored, so ``"MU-Hall"``, ``"mu_hall_yolov8"`` and
+    ``"Indoors/MU-Hall/annotations"`` all give ``"mu-hall"``.
+    """
     import re
     norm = "-" + re.sub(r"[^a-z0-9]+", "-", str(text).lower()).strip("-") + "-"
     names = [(a, sid) for sid, v in SCENES.items() for a in [sid] + v.get("aliases", [])]

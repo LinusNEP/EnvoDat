@@ -16,6 +16,18 @@ def _torch():
 
 class EnvoDatDetection:
 
+    """Detection dataset over one split of a downloaded scene.
+
+    Each item is ``(image, target)``: a ``[3, H, W]`` float tensor in ``[0, 1]`` and a dict
+    with ``boxes`` (normalised ``cx, cy, w, h``), ``labels``, ``image_id`` and ``path``.
+    Polygon labels are converted to their bounding boxes.
+
+    Args:
+        scene: Scene id, e.g. ``"mu-hall"``.
+        split: ``"train"``, ``"validation"`` (or ``"val"``) or ``"test"``.
+        image_size: Int or ``(h, w)`` to resize to; ``None`` keeps the original size.
+        transform: Optional ``(image, target) -> (image, target)`` callable.
+    """
     def __init__(self, scene, split="train", image_size=640, transform=None):
         split = {"val": "validation", "valid": "validation"}.get(split, split)
         self.dir = scene_dir(scene) / SPLIT_DIRS[split]
@@ -69,6 +81,7 @@ class EnvoDatDetection:
 
 
 def collate(batch):
+    """Stacks images of equal size into a batch and keeps the targets as a list."""
     torch = _torch()
     images, targets = zip(*batch)
     try:
@@ -80,6 +93,21 @@ def collate(batch):
 
 def dataloader(scene, split="train", batch_size=8, image_size=640, shuffle=None,
                num_workers=0, transform=None, **kwargs):
+    """Returns a ``torch.utils.data.DataLoader`` over a downloaded scene.
+
+    Args:
+        scene: Scene id, e.g. ``"mu-hall"``.
+        split: ``"train"``, ``"validation"`` or ``"test"``.
+        batch_size: Images per batch.
+        image_size: Resize target (int or ``(h, w)``); ``None`` keeps the original size.
+        shuffle: Defaults to ``True`` for the train split.
+        num_workers: Worker processes for loading.
+        transform: Optional ``(image, target) -> (image, target)`` callable.
+        **kwargs: Passed to ``DataLoader``.
+
+    Returns:
+        A loader that yields ``(images, targets)`` as described in :class:`EnvoDatDetection`.
+    """
     torch = _torch()
     ds = EnvoDatDetection(scene, split, image_size, transform)
     return torch.utils.data.DataLoader(

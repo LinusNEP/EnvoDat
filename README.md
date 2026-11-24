@@ -89,6 +89,10 @@ The public leaderboard can be found in [`docs/benchmark.md`](https://linusnep.gi
 
 To reproduce or contribute results, see [How to submit](https://linusnep.github.io/EnvoDat/benchmark.html#how-to-submit) and [`CONTRIBUTING.md`](https://github.com/LinusNEP/EnvoDat/blob/main/CONTRIBUTING.md).
 
+## Maintainers
+
+Maintainers publish data on Hugging Face, release the `envodat` package and update the documentation website by following [MAINTAINING.md](https://github.com/LinusNEP/EnvoDat/blob/main/MAINTAINING.md).
+
 ## Paper Citation
 
 If you use this work in your research, please cite our [paper](https://ieeexplore.ieee.org/abstract/document/11127594) and [dataset](https://linusnep.github.io/EnvoDat/) using the following BibTeX entry:

@@ -10,6 +10,10 @@ def _np():
 
 
 def get_traj_np(path):
+    """Loads a trajectory as an ``[N, 8]`` array: ``t, x, y, z, qx, qy, qz, qw``.
+
+    Reads the EnvoDat ground-truth CSV (``gt-poses-*.csv``) and TUM files.
+    """
     np = _np()
     rows = []
     for line in Path(path).read_text().splitlines():
@@ -24,6 +28,7 @@ def get_traj_np(path):
 
 
 def to_tum(path, out=None):
+    """Converts an EnvoDat ground-truth CSV to a TUM file and returns its path."""
     traj = get_traj_np(path)
     out = Path(out) if out else Path(path).with_suffix(".tum")
     _np().savetxt(out, traj, fmt="%.9f")
@@ -56,6 +61,19 @@ def _stat(metric, data):
 
 
 def evaluate_traj(est_traj, gt_traj, align="se3", delta=1, max_diff=0.02, sd_form="ratio"):
+    """Evaluates a trajectory against ground truth with the EnvoDat benchmark metrics.
+
+    Args:
+        est_traj: Estimated trajectory: TUM or EnvoDat CSV path, or ``[N, 8]`` array.
+        gt_traj: Ground truth: ``gt-poses-*.csv`` or TUM path, or ``[N, 8]`` array.
+        align: ``"none"``, ``"se3"`` or ``"sim3"``.
+        delta: Frame offset for RPE and scale drift.
+        max_diff: Maximum timestamp difference for association, in seconds.
+        sd_form: Scale drift as ``"ratio"`` (optimum 1) or ``"abs"`` (optimum 0).
+
+    Returns:
+        A dict with ``ate``, ``rpe`` and ``sd``, each a ``(mean, std)`` tuple.
+    """
     np = _np()
     metrics, sync, _ = _evo()
     gt, est = sync.associate_trajectories(_as_evo(gt_traj), _as_evo(est_traj), max_diff=max_diff)

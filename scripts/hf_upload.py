@@ -1,4 +1,19 @@
 #!/usr/bin/env python
+"""Packs annotated EnvoDat scenes and publishes them on the Hugging Face Hub (maintainers).
+
+Every folder under --src that contains train/images is a YOLO export; its scene id is
+taken from the path. Each scene is as follows
+
+    yolo/<scene>.zip                  Ultralytics layout with data.yaml
+    data/<scene>/<split>-*.parquet    🤗 datasets and the Hub's data viewer
+
+together with a generated dataset card (README.md). The full procedure is in MAINTAINING.md.
+
+Examples:
+    python scripts/hf_upload.py --src /path/to/yolo-exports --stage-only
+    python scripts/hf_upload.py --src /path/to/yolo-exports
+"""
+
 
 import argparse
 import json
@@ -32,6 +47,11 @@ def slug(name):
 
 
 def find_scenes(src):
+    """Yields ``(scene_id, environment, scene_dir)`` for every folder containing ``train/images``.
+
+    The scene id comes from the closest path component that names a known scene, otherwise
+    from the folder name. Duplicate ids get a numeric suffix and a warning.
+    """
     seen = set()
     for train_imgs in sorted(Path(src).rglob("train/images")):
         scene_dir = train_imgs.parent.parent
@@ -51,6 +71,7 @@ def find_scenes(src):
 
 
 def read_names(scene_dir):
+    """Returns the class names from the scene's YOLO YAML, in label-id order."""
     candidates = sorted(scene_dir.glob("*.yaml")) + sorted(scene_dir.glob("*.yml"))
     for y in candidates:
         cfg = yaml.safe_load(y.read_text()) or {}
@@ -63,6 +84,7 @@ def read_names(scene_dir):
 
 
 def yolo_to_coco_boxes(label_file, w, h):
+    """Converts YOLO labels (boxes or polygons, normalised) to COCO pixel boxes ``[x, y, w, h]``."""
     bboxes, cats = [], []
     if not label_file.exists():
         return bboxes, cats
@@ -93,6 +115,11 @@ def place(src, dst, copy):
 
 
 def normalise_label(text):
+    """Rewrites box rows as 4-corner polygons in label files that mix boxes and polygons.
+
+    Ultralytics skips images whose labels mix the two. Returns the new label text, or ``None``
+    if the file needs no change.
+    """
     rows = [line.split() for line in text.splitlines() if line.strip()]
     kinds = {len(r) == 5 for r in rows if len(r) >= 5}
     if kinds != {True, False}:
@@ -159,6 +186,7 @@ HF_SPLITS = (("train", "train"), ("validation", "valid"), ("test", "test"))
 
 
 def pack_scene(info, out):
+    """Writes ``yolo/<scene>.zip`` and ``data/<scene>/<split>-*.parquet`` for a staged scene."""
     import zipfile
     try:
         from datasets import ClassLabel, Dataset, Features, Image as HFImage, Sequence, Value
@@ -302,7 +330,7 @@ def main():
                     help="Upload another format tree as-is under FORMAT/, e.g. coco=/data/coco")
     ap.add_argument("--copy", action="store_true", help="Copy files instead of symlinking")
     ap.add_argument("--public", action="store_true",
-                    help="Create/upload to a PUBLIC repo (default: private, only you can see it)")
+                    help="Create/upload to a PUBLIC repo (default: private, visible only to the repo owner)")
     ap.add_argument("--stage-only", action="store_true", help="Stage locally, do not upload")
     args = ap.parse_args()
     publish(args.src, args.out, args.repo_id, args.extra, args.copy, args.public,
