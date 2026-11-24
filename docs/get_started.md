@@ -81,14 +81,14 @@ names: ["class_name1", "class_name2", ..., "class_nameN"]
 
 ## Training the YOLO model on EnvoDat
 
-1.	Download the pre-trained model checkpoints (e.g., `yolov8s.pt` for YOLOv8 small or `yolov11n.pt` for YOLOv11 nano):
+1.	Download the pre-trained model checkpoints (e.g., `yolov8s.pt` for YOLOv8 small or `yolo11n.pt` for YOLO11 nano):
 
 | Example models | Pretrained checkpoints download |
 |----------------|--------------------------------|
 | YOLOv8    | [YOLOv8n](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8n.pt), [YOLOv8s](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8s.pt), [YOLOv8m](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8m.pt), [YOLOv8l](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8l.pt), [YOLOv8x](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8x.pt)  |
 | YOLOv9    |  [YOLOv9t](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov9t.pt), [YOLOv9s](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov9s.pt), [YOLOv9m](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov9m.pt), [YOLOv9c](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov9c.pt), [YOLOv9e](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov9e.pt)   |
 | YOLOv10    |  [YOLOv10n](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov10n.pt), [YOLOv10s](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov10s.pt), [YOLOv10m](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov10m.pt), [YOLOv10b](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov10b.pt), [YOLOv10l](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov10l.pt), [YOLOv10x](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov10x.pt)  |
-| YOLOv11    |  [YOLOv11n](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov11n.pt), [YOLOv11s](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov11s.pt), [YOLOv11m](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov11m.pt), [YOLOv11l](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov11l.pt), [YOLOv11x](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov11x.pt)  |
+| YOLOv11    |  [YOLO11n](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n.pt), [YOLO11s](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11s.pt), [YOLO11m](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11m.pt), [YOLO11l](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11l.pt), [YOLO11x](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11x.pt)  |
 
 2.	Train the model with the following command:
 ```bash

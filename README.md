@@ -11,9 +11,9 @@
 [![Hugging Face Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-ffcc4d.svg)](https://huggingface.co/datasets/Linpen/EnvoDat)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
-📖 [Documentation](https://linusnep.github.io/EnvoDat/) | 🌐 [Project Website](https://sites.google.com/view/envodat/overview) | ⚙️ [Install](docs/installation.md) | 🧪 [Examples](docs/examples.md) | 🏆 [Leaderboard](docs/benchmark.md) | 🤗 [Hugging Face](https://huggingface.co/datasets/Linpen/EnvoDat) | 📥 [Download](https://sites.google.com/view/envodat/download) | ⚖️ [License](https://creativecommons.org/licenses/by/4.0/)
+📖 [Documentation](https://linusnep.github.io/EnvoDat/) | 🌐 [Project Website](https://sites.google.com/view/envodat/overview) | ⚙️ [Install](https://linusnep.github.io/EnvoDat/installation.html) | 🧪 [Examples](https://linusnep.github.io/EnvoDat/examples.html) | 🏆 [Leaderboard](https://linusnep.github.io/EnvoDat/benchmark.html) | 🤗 [Hugging Face](https://huggingface.co/datasets/Linpen/EnvoDat) | 📥 [Download](https://sites.google.com/view/envodat/download) | ⚖️ [License](https://creativecommons.org/licenses/by/4.0/)
 
-<img src="docs/scene_characteristics.gif" alt="Scene characteristics">
+<img src="https://raw.githubusercontent.com/LinusNEP/EnvoDat/main/docs/scene_characteristics.gif" alt="Scene characteristics">
 
 ---
 
@@ -32,7 +32,7 @@ Here, we provide the **`envodat` toolkit** (`pip install envodat`) and the **dev
 
 <p align="center">
   <a href="https://youtu.be/5OcByVmTUPQ">
-    <img src="docs/sumVideo.png" alt="Summary video" width="500">
+    <img src="https://raw.githubusercontent.com/LinusNEP/EnvoDat/main/docs/sumVideo.png" alt="Summary video" width="500">
   </a>
 </p>
 
@@ -58,7 +58,7 @@ from datasets import load_dataset
 ds = load_dataset("Linpen/EnvoDat", "mu-hall")   # train / validation / test splits
 ```
 
-See [`docs/huggingface.md`](docs/huggingface.md) for the Hub layout and version pinning, and [`docs/examples.md`](docs/examples.md#download-raw-data) for downloading raw data from the CPS server.
+See [`docs/huggingface.md`](https://linusnep.github.io/EnvoDat/huggingface.html) for the Hub layout and version pinning, and [`docs/examples.md`](https://linusnep.github.io/EnvoDat/examples.html#download-raw-data) for downloading raw data from the CPS server.
 
 ## Quickstart
 
@@ -77,16 +77,16 @@ ed.train_yolo("mu-hall", model="yolo11n.pt", epochs=100)         # Ultralytics Y
 ed.evaluate_traj("my_slam.tum", "gt-poses-mu-hall.csv")          # ATE / RPE / scale drift
 ```
 
-The same is available from the command line (`envodat download mu-hall`, `envodat train mu-hall`, `envodat eval ...`). The [documentation](https://linusnep.github.io/EnvoDat/) covers [installation](docs/installation.md), [examples](docs/examples.md) including training with 🤗 Transformers, the [API](docs/api.md), the [modalities](docs/modalities.md) and [environments](docs/environments.md), and a full [YOLO walkthrough](docs/get_started.md).
+The same is available from the command line (`envodat download mu-hall`, `envodat train mu-hall`, `envodat eval ...`). The [documentation](https://linusnep.github.io/EnvoDat/) covers [installation](https://linusnep.github.io/EnvoDat/installation.html), [examples](https://linusnep.github.io/EnvoDat/examples.html) including training with 🤗 Transformers, the [API](https://linusnep.github.io/EnvoDat/api.html), the [modalities](https://linusnep.github.io/EnvoDat/modalities.html) and [environments](https://linusnep.github.io/EnvoDat/environments.html), and a full [YOLO walkthrough](https://linusnep.github.io/EnvoDat/get_started.html).
 
 ## Benchmark & Leaderboard
 
-The public leaderboard can be found in [`docs/benchmark.md`](docs/benchmark.md) and covers two tracks:
+The public leaderboard can be found in [`docs/benchmark.md`](https://linusnep.github.io/EnvoDat/benchmark.html) and covers two tracks:
 
 - **SLAM track** — RTAB-Map, ORB-SLAM3, HDL-SLAM, FAST-LIO2, DLIO across five representative scenes, scored by ATE, RPE, and scale drift.
 - **Detection track** — object detectors evaluated with mAP on EnvoDat scenes.
 
-To reproduce or contribute results, see [How to submit](docs/benchmark.md#how-to-submit) and [`CONTRIBUTING.md`](CONTRIBUTING.md).
+To reproduce or contribute results, see [How to submit](https://linusnep.github.io/EnvoDat/benchmark.html#how-to-submit) and [`CONTRIBUTING.md`](https://github.com/LinusNEP/EnvoDat/blob/main/CONTRIBUTING.md).
 
 ## Paper Citation
 
@@ -120,7 +120,7 @@ If you use this work in your research, please cite our [paper](https://ieeexplor
 ## License
 
 The dataset and documentation are licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
-The code/scripts in this repository are released under the [MIT License](LICENSE-CODE). (Creative Commons recommends against using CC licenses for software, hence the separate code license.)
+The code/scripts in this repository are released under the [MIT License](https://github.com/LinusNEP/EnvoDat/blob/main/LICENSE-CODE). (Creative Commons recommends against using CC licenses for software, hence the separate code license.)
 
 ## Acknowledgement
 
