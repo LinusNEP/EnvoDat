@@ -88,35 +88,41 @@ names: ["class_name1", "class_name2", ..., "class_nameN"]
 | YOLOv8    | [YOLOv8n](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8n.pt), [YOLOv8s](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8s.pt), [YOLOv8m](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8m.pt), [YOLOv8l](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8l.pt), [YOLOv8x](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8x.pt)  |
 | YOLOv9    |  [YOLOv9t](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov9t.pt), [YOLOv9s](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov9s.pt), [YOLOv9m](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov9m.pt), [YOLOv9c](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov9c.pt), [YOLOv9e](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov9e.pt)   |
 | YOLOv10    |  [YOLOv10n](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov10n.pt), [YOLOv10s](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov10s.pt), [YOLOv10m](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov10m.pt), [YOLOv10b](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov10b.pt), [YOLOv10l](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov10l.pt), [YOLOv10x](https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov10x.pt)  |
-| YOLOv11    |  [YOLO11n](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n.pt), [YOLO11s](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11s.pt), [YOLO11m](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11m.pt), [YOLO11l](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11l.pt), [YOLO11x](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11x.pt)  |
+| YOLO11     |  [YOLO11n](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n.pt), [YOLO11s](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11s.pt), [YOLO11m](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11m.pt), [YOLO11l](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11l.pt), [YOLO11x](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11x.pt)  |
 
 2.	Train the model with the following command:
 ```bash
 # For YOLOv8
 yolo train model=yolov8n.pt data=/.../dataset/envodata-mu-hall.yaml epochs=100 imgsz=640
 
-# For YOLOv11
-yolo train model=yolov11x.pt data=/.../dataset/envodata-mu-hall.yaml epochs=100 imgsz=640
+# For YOLO11
+yolo train model=yolo11x.pt data=/.../dataset/envodata-mu-hall.yaml epochs=100 imgsz=640
 ```
 Adjust the model and hyperparameters as needed (e.g., `model`, `epochs`, `batch size`) for optimal results:
 ```bash
-yolo train model=yolov11x.pt \
+yolo train model=yolo11x.pt \
     data=/.../dataset/envodata-mu-hall.yaml \
-    epochs=150 \		#Number of training epochs
-    imgsz=640 \
-    batch=16 \           #Batch size
-    lr0=0.01 \			#Initial learning rate
-    lrf=0.1 \			#Final learning rate
-    momentum=0.937 \		#Momentum for SGD optimiser
-    weight_decay=0.0005 \	# Regularisation parameter
-    save_period=10 \		#Save model every n epochs
-    patience=50 \		#Number of epochs with no improvement after which training will be stopped
-    device=0 \			#Specify the device for training (CPU or GPU)
+    epochs=150 imgsz=640 batch=16 \
+    lr0=0.01 lrf=0.1 momentum=0.937 weight_decay=0.0005 \
+    save_period=10 patience=50 device=0
 ```
+
+| Argument | Meaning |
+| --- | --- |
+| `epochs` | Number of training epochs |
+| `batch` | Batch size |
+| `lr0`, `lrf` | Initial learning rate, and final learning rate as a fraction of `lr0` |
+| `momentum` | Momentum for the SGD optimiser |
+| `weight_decay` | Regularisation strength |
+| `save_period` | Save a checkpoint every n epochs |
+| `patience` | Stop after this many epochs without improvement |
+| `device` | `0` for the first GPU, `cpu` for the CPU |
 3.	Models' Performance Evaluation
 
 After training, evaluate the performance on the validation data:
 ```python
+from ultralytics import YOLO
+model = YOLO('runs/detect/train/weights/best.pt')  # the weights from your training run
 validation_metrics = model.val(split='val')  # This automatically uses the validation split defined in envodata-*.yaml
 ```
 You could also run the evaluation on the test set to see how the model performs on unseen data:
