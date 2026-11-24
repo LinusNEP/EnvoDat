@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "envodat"
+version = "0.1.0"
+description = "Toolkit for EnvoDat: download, load, train on and evaluate a multisensory robotics dataset"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "Linus Nwankwo" }]
+keywords = ["robotics", "dataset", "slam", "object-detection", "lidar", "hugging-face"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "huggingface_hub>=0.25",
+    "pyyaml>=6.0",
+    "pillow>=9.0",
+    "numpy>=1.21",
+]
+
+[project.optional-dependencies]
+hf = ["datasets>=2.14"]
+torch = ["torch>=2.0"]
+train = ["ultralytics>=8.1.0"]
+slam = ["evo>=1.25"]
+all = ["datasets>=2.14", "torch>=2.0", "ultralytics>=8.1.0", "evo>=1.25"]
+docs = ["sphinx>=7", "sphinx-rtd-theme>=2", "myst-parser>=2", "sphinx-copybutton"]
+
+[project.scripts]
+envodat = "envodat.cli:main"
+
+[project.urls]
+Homepage = "https://linusnep.github.io/EnvoDat/"
+Documentation = "https://linusnep.github.io/EnvoDat/"
+Repository = "https://github.com/LinusNEP/EnvoDat"
+Dataset = "https://huggingface.co/datasets/Linpen/EnvoDat"
+Paper = "https://ieeexplore.ieee.org/document/11127594"
+
+[tool.setuptools.packages.find]
+include = ["envodat*"]

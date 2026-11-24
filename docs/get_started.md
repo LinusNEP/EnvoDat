@@ -1,5 +1,5 @@
-# Train, evaluate, and benchmark supervised learning models on EnvoDat
-In this demo, we show how to train, evaluate, and benchmark supervised learning models on EnvoDat. Further, we show how to perform inference on new data and provide a walk-through on key steps in model selection and fine-tuning.
+# Get Started: Train a YOLO Detector
+In this walkthrough, we show how to train, evaluate, and benchmark supervised learning models on EnvoDat. Further, we show how to perform inference on new data and provide a walk-through on key steps in model selection and fine-tuning.
 
 ## Prerequisites
 - Python 3 is installed on your system
@@ -27,6 +27,16 @@ pip install pandas matplotlib
 ```
 
 ## Prepare the EnvoData Dataset
+
+### Option A (recommended): fetch a training-ready scene from Hugging Face
+The annotated scenes are published on the [Hugging Face Hub](https://huggingface.co/datasets/Linpen/EnvoDat) already in YOLO's directory structure, together with a ready-made config. Hence, a single command replaces steps 1 and 2 of Option B:
+```bash
+pip install envodat
+envodat --root ./data download mu-hall
+```
+The scene then sits in `./data/yolo/mu-hall/`, and its config is `./data/yolo/mu-hall/data.yaml`. Use that path wherever this guide writes `/.../dataset/envodata-mu-hall.yaml`, and continue with [Training the YOLO model on EnvoDat](#training-the-yolo-model-on-envodat). Alternatively, `envodat train mu-hall` downloads and trains in one go. For other model families, see the [Examples](examples.md#training-example).
+
+### Option B: download manually and reorganise
 1.   Download the annotated data at [EnvoDat annotations](https://sites.google.com/view/envodat/download). Depending on your task, download only the format that satisfies your requirements, e.g., YOLOv*, COCO, OpenAI-CLIP, VOC, etc. We organised the EnvoDat dataset in the hierarchical structure shown below:
 
 ```
@@ -61,9 +71,9 @@ dataset/
 In each of the scenes, provide a YOLOv* configuration file named `envodata-*.yaml` which specifies the dataset paths and class names. If it does not exist, create one in the following form:
 
 ```yaml
-train: ../train/images	
-val: ../valid/images	
-test: ../test/images	
+train: ../train/images
+val: ../valid/images
+test: ../test/images
 
 nc: <number of classes>
 names: ["class_name1", "class_name2", ..., "class_nameN"]
@@ -106,15 +116,15 @@ yolo train model=yolov11x.pt \
 3.	Models' Performance Evaluation
 
 After training, evaluate the performance on the validation data:
-```bash
+```python
 validation_metrics = model.val(split='val')  # This automatically uses the validation split defined in envodata-*.yaml
 ```
 You could also run the evaluation on the test set to see how the model performs on unseen data:
-```bash
+```python
 test_metrics = model.val(split='test')  # This uses the test split from the envodata-*.yaml
 ```
 Once you are done training, you can save the trained model weights for inference or for further fine-tuning:
-```bash
+```python
 model.export(format='onnx')  # Export to ONNX format (alternatively use 'torchscript', 'engine' etc.)
 ```
 ## Run inference on multiple unseen images
@@ -124,8 +134,8 @@ model.export(format='onnx')  # Export to ONNX format (alternatively use 'torchsc
 yolo predict model=best.pt source=path/to/unseen_images
 ```
 Alternatively, you can simply run the following Python script:
-```python
-python unseenImgInference.py \
+```bash
+python scripts/unseenImgInference.py \
         --model runs/detect/train/weights/best.pt \
         --source path/to/unseen_images \
         --project runs/detect \
@@ -135,8 +145,8 @@ python unseenImgInference.py \
 ## Metrics and Analysis
 After training the model, the training results `results.csv` will be generated. You can analyse the validation losses, validation metrics (Precision, Recall, mAP), and learning rate over time using the following python script:
 
-```python
-metrics_eval.py
+```bash
+python scripts/metrics_eval.py
 ```
 
 
