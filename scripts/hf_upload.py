@@ -2,7 +2,7 @@
 """Packs annotated EnvoDat scenes and publishes them on the Hugging Face Hub (maintainers).
 
 Every folder under --src that contains train/images is a YOLO export; its scene id is
-taken from the path. Each scene is as follows
+taken from the path. Each scene is stored as
 
     yolo/<scene>.zip                  Ultralytics layout with data.yaml
     data/<scene>/<split>-*.parquet    🤗 datasets and the Hub's data viewer
