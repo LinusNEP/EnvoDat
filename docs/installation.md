@@ -53,6 +53,14 @@ Until the first PyPI release is out, you can also install the latest version str
 
 The SLAM track of the [benchmark](benchmark.md) compares RTAB-Map, ORB-SLAM3, HDL-SLAM, FAST-LIO2 and DLIO. These pipelines are **not** redistributed here, so install them from their upstream repositories (most are ROS packages), run them on the EnvoDat sequences, and evaluate the estimated trajectories with {func}`envodat.evaluate_traj` or `envodat eval`.
 
+## Get access to the data
+
+The annotated scenes on Hugging Face are gated: open the [dataset page](https://huggingface.co/datasets/Linpen/EnvoDat), agree to the conditions (one click), then log in once:
+
+```bash
+hf auth login
+```
+
 ## Verify the installation
 
 ```bash

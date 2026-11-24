@@ -49,6 +49,7 @@ To fetch scenes from the Hub, either use the helper script or load them directly
 
 ```bash
 pip install envodat
+hf auth login                      # once; first agree to the dataset's conditions on its Hugging Face page
 envodat list                       # available scenes
 envodat download mu-hall           # one scene, YOLO-ready
 ```

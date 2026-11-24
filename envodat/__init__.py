@@ -22,7 +22,7 @@ from .slam import evaluate_traj, get_traj_np, to_tum
 from .torch_data import EnvoDatDetection, dataloader
 from .train import train_yolo
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 __all__ = [
     "init", "root", "SCENES", "scene_ids", "list_scenes", "info", "download", "download_raw",

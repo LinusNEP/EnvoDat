@@ -33,6 +33,11 @@ def _normalise(scenes):
     return out
 
 
+def _gated_message(repo_id):
+    return (f"EnvoDat on Hugging Face is gated. Open https://huggingface.co/datasets/{repo_id}, "
+            "agree to the conditions (one click), then log in once with `hf auth login`.")
+
+
 def _not_found():
     """Exception types for 'file not in repo', across huggingface_hub versions."""
     from huggingface_hub import errors
@@ -51,8 +56,12 @@ def list_scenes(format="yolo", revision=None, repo_id=None):
     Returns:
         Sorted list of scene ids, e.g. ``["leo-for", "mu-hall", ...]``.
     """
-    files = _hub().list_repo_files(repo_id or _config.HF_REPO_ID, repo_type="dataset",
-                                   revision=revision)
+    hub = _hub()
+    repo_id = repo_id or _config.HF_REPO_ID
+    try:
+        files = hub.list_repo_files(repo_id, repo_type="dataset", revision=revision)
+    except hub.errors.GatedRepoError as exc:
+        raise PermissionError(_gated_message(repo_id)) from exc
     prefix = format.rstrip("/") + "/"
     return sorted(f[len(prefix):-4] for f in files
                   if f.startswith(prefix) and f.endswith(".zip") and f.count("/") == 1)
@@ -146,6 +155,8 @@ def download(scene=None, format="yolo", revision=None, config=None, repo_id=None
         try:
             zpath = hub.hf_hub_download(repo_id, f"{format}/{s}.zip", repo_type="dataset",
                                         revision=revision)
+        except hub.errors.GatedRepoError as exc:
+            raise PermissionError(_gated_message(repo_id)) from exc
         except _not_found():
             print(f"WARNING: scene '{s}' is not on the Hub in format '{format}'. "
                   f"See envodat.list_scenes().", file=sys.stderr)

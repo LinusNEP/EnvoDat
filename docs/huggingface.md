@@ -15,6 +15,10 @@ On the one hand, `load_dataset` reads the Parquet files and returns images with 
 
 ## Download
 
+```{note}
+The dataset is **gated**: open [its Hugging Face page](https://huggingface.co/datasets/Linpen/EnvoDat), agree to the conditions (one click), and log in once with `hf auth login` (a token with read access from [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)). Downloads and `load_dataset` then work as shown below.
+```
+
 With the toolkit, downloading is a single call: it fetches the scene's zip, unpacks it, and rewrites its `data.yaml` with absolute paths so training works from any directory:
 
 ```python

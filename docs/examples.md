@@ -12,6 +12,10 @@ ed.init("/data/envodat")      # or set the ENVODAT_ROOT environment variable
 
 ### Download via Python API
 
+```{note}
+The dataset is **gated**: open [its Hugging Face page](https://huggingface.co/datasets/Linpen/EnvoDat), agree to the conditions (one click), and log in once with `hf auth login` (a token with read access from [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)). Downloads and `load_dataset` then work as shown below.
+```
+
 The annotated scenes are fetched from the [Hugging Face Hub](huggingface.md). Only the scenes you ask for are downloaded, and downloads are cached and resumable.
 
 ```python

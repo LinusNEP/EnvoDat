@@ -12,7 +12,7 @@
 
 **`scene 'xyz' is not on the Hub`.** Check the scene id with `envodat list`. Ids are lower case with dashes, for example `mu-hall` and `subt-zab-01`; names such as `MU-Hall` are converted automatically.
 
-**`401` or `403` errors.** If the dataset is gated, accept its terms on the [dataset page](https://huggingface.co/datasets/Linpen/EnvoDat) and log in once with `hf auth login`.
+**"EnvoDat on Hugging Face is gated", or `401` / `403` errors.** Open the [dataset page](https://huggingface.co/datasets/Linpen/EnvoDat), agree to the conditions while logged in, and log in once on your machine with `hf auth login`. A token with read access is enough.
 
 **`429 Too Many Requests`.** The Hub limits how many requests an account makes in five minutes. Each scene is only a few files, so this should be rare; if it happens, wait five minutes and run the same command again (finished files are cached). Logging in with `hf auth login` raises the limit.
 

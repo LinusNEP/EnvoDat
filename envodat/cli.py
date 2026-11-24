@@ -105,7 +105,7 @@ def main(argv=None):
         ap.error("download: give scene ids, --all or --config")
     try:
         args.fn(args)
-    except (ImportError, FileNotFoundError, ConnectionError, ValueError) as exc:
+    except (ImportError, FileNotFoundError, ConnectionError, ValueError, PermissionError) as exc:
         sys.exit(f"error: {exc}")
 
 
