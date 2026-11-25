@@ -35,7 +35,7 @@ docs = ["sphinx>=7", "sphinx-rtd-theme>=2", "myst-parser>=2", "sphinx-copybutton
 envodat = "envodat.cli:main"
 
 [project.urls]
-Homepage = "https://linusnep.github.io/EnvoDat/"
+Homepage = "https://sites.google.com/view/envodat/overview"
 Documentation = "https://linusnep.github.io/EnvoDat/"
 Repository = "https://github.com/LinusNEP/EnvoDat"
 Dataset = "https://huggingface.co/datasets/Linpen/EnvoDat"
